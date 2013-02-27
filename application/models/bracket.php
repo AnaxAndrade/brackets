@@ -135,6 +135,15 @@ class Bracket extends MY_Model {
 		$this->teamCount = count($this->teams);
 	}
 	
+	/**
+	 * getTeamPlayerNames 
+	 * Get the players from a given team
+	 
+	 THIS DOESNT WORK YET
+	 * 
+	 * @param int $teamIndex Index of the team from 'teams' property
+	 * @return
+	 */
 	public function getTeamPlayerNames($teamIndex)
 	{
 		return isset($this->teams[$teamIndex]) ? $this->teams[$teamIndex] : array();
@@ -186,7 +195,7 @@ class Bracket extends MY_Model {
 		*/
 		if($this->currentRound === $this->rounds) 
 		{
-			
+			// The champ.  sort of.
 		}else{
 			// will need to set "home" or "away"
 			if(isset($this->matches[$this->getRoundId($this->currentRound+1)][$nextMatchIndex]))
