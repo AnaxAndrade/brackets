@@ -19,15 +19,21 @@ class Home extends CI_Controller {
 	 */
 	public function index()
 	{
-		$testUsers = array('Fez', 'Stephen Hyde', 'Eric Forman', 'Laura Pinciotti', 'Redd Forman', 'Jackie Berkhart', 'Kitty Forman', 'Bob Pinciotti');
+		$this->load->model('Bracket','bracket');		
 		
-		$this->load->model('Bracket','bracket');
-		
-		$playersPerTeam = 2;
+		// $testUsers = array(	'Fez', 'Stephen Hyde', 'Eric Forman', 'Laura Pinciotti', 'Redd Forman', 'Jackie Berkhart', 'Kitty Forman', 'Bob Pinciotti', 'Kelso', 'Leo', 'Nina', 'Laurie', 'Midge Pinciotti', 'Jimmy Page', 'Mila Kunis', 'Danny Masterson');
+		$testUsers = array(	'Fez', 'Stephen Hyde', 'Eric Forman', 'Laura Pinciotti', 'Redd Forman', 'Jackie Berkhart', 'Kitty Forman', 'Bob Pinciotti');
+
+		$playersPerTeam = 1;
 		$maxLosses = 1;
-		$this->bracket->initialize($testUsers, $playersPerTeam, $maxLosses);
+		$this->bracket->initialize($testUsers, $playersPerTeam, $maxLosses);		
 		
-		$this->bracket->outputTestData();
+		$this->bracket->advanceTeam(0, 'away');
+		$this->bracket->advanceTeam(1, 'home');
+		$this->bracket->advanceTeam(2, 'away');
+		$this->bracket->advanceTeam(3, 'home');
+		
+		$this->load->view('bracket_v');
 	}
 }
 

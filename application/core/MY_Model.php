@@ -20,6 +20,37 @@ class MY_Model extends CI_Model {
 		return $this;
 	}
 
+	/* 
+		==========================================================================================
+		ouputTestData - print all the vars active in the obj. 
+	*/
+	public function developer($property = false)
+	{
+		print '<pre>';		
+		if($property)
+		{	
+			if(is_array($property))
+			{
+				foreach($property as $key => $p)
+				{
+					if(property_exists($this,$p))
+					{
+						print '<br /><b>'.strtoupper($p).'</b><br />';
+						print_r($this->$p);
+						for($i=0;$i<30;$i++) print '-';
+					}
+				}
+			}else{
+				print '<br /><b>'.strtoupper($property).'</b><br />';
+				print_r($this->$property);
+				for($i=0;$i<30;$i++) print '-';
+			}
+		}else{
+			print_r(get_object_vars($this));
+		}
+		print '</pre>';
+		
+	}
 }
 
 /* End of file mY_Model.php */
