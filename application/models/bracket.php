@@ -43,11 +43,6 @@ class Bracket extends MY_Model {
 	protected $teams = array();
 	
 	/* 
-		Teams that are still in the tournament 
-	*/
-	protected $activeTeams = array();
-	
-	/* 
 		Array of matches. 
 	*/
 	protected $matches = array();
@@ -111,17 +106,16 @@ class Bracket extends MY_Model {
 			Setting the var random to true will shuffle the array of players.  
 			Otherwise it will be a first second, third fourth, in order. 
 		*/
-		if($random)
-		{	
-			shuffle($this->players); 	// put the players in a random order to assign them.
-		}
+		if($random) shuffle($this->players); 	// put the players in a random order to assign them.
 
 		/* 
 			Iterate through all players increasing by the total number of players per team. 
 		*/
 		for($i=0;$i<$this->playerCount;$i+=$this->playersPerTeam)
 		{
-			$team = array(current($this->players));
+			$team = array(
+				current($this->players)
+			);
 			for($k=1;$k<$this->playersPerTeam;$k++) { // add as many players as needed.  notice index starts at 1.
 				$team[] = next($this->players);
 			}
@@ -129,8 +123,6 @@ class Bracket extends MY_Model {
 			next($this->players);
 		}
 		
-		// set active teams to all teams because this is the beginning of the tournament
-		$this->activeTeams = $this->teams;
 		// update team count.
 		$this->teamCount = count($this->teams);
 	}
@@ -147,20 +139,6 @@ class Bracket extends MY_Model {
 	public function getTeamPlayerNames($teamIndex)
 	{
 		return isset($this->teams[$teamIndex]) ? $this->teams[$teamIndex] : array();
-	}
-	
-	/**
-	 * unsetTeam 
-	 * Unset a team from the activeTeams array
-	 * 
-	 * @param array $team Team to unset.
-	 */
-	public function teamIsOut($team)
-	{
-		if(!is_array($team)) return;
-		
-		$unsetId = array_search($team, $this->activeTeams);
-		unset($this->activeTeams[$unsetId]);
 	}
 	
 	/**
@@ -228,12 +206,13 @@ class Bracket extends MY_Model {
 	public function getRoundId($r = false)
 	{
 		$r = $r ? $r : $this->currentRound;
-		if($r === 1){
-			return 'First Round';
+		
+		if($r == $this->rounds){
+			return 'Finals';
 		}elseif($r == ($this->rounds - 1)){
 			return 'Semi Finals';			
-		}elseif($r == $this->rounds){
-			return 'Finals';
+		}elseif($r === 1){
+			return 'First Round';
 		}
 		return 'Round '.str_pad($r,2,'0',STR_PAD_LEFT);
 	}
@@ -272,46 +251,39 @@ class Bracket extends MY_Model {
 	{
 		$this->calculateMatches();		
 		$this->setRounds();
-		$this->currentRound = 1;
+		$this->currentRound = 1;	// reset the current round to 1.  if needed...  doesn't hurt.
+		$matchesThisRound = ceil(($this->playerCount/$this->playersPerTeam)/2); 	// number of matches for the first round.
 		
-		$matchesThisRound = ceil(($this->playerCount/$this->playersPerTeam)/2);
-		
+		// assign matches for all rounds.
 		for($r=1;$r<=$this->rounds;$r++)
 		{	
-			$this->matches[$this->getRoundId($r)] = array();
-
 			for($i=0;$i<$matchesThisRound;$i++)
 			{
-				$homeKey = $i*2;
-				$awayKey = $homeKey+1;
-				
-				if($this->currentRound === $r)
+				if($r===1)	// we can only assign the first round
 				{
-					/* 
-						Define the teams based on current teams. 
-					*/
 					$match = array(
 						'teams' => array(
-							'home' => $this->activeTeams[$homeKey],
-							'away' => isset($this->activeTeams[$awayKey]) ? $this->activeTeams[$awayKey] : null
+							'home' => current($this->teams),
+							'away' => next($this->teams) ? current($this->teams) : null
 						),
 						'winner' => false,
 						'status' => 'pending'
 					);
 				}else{
-					/* 
-						Teams cannot be set because we don't know who is playing who yet. 
-					*/
 					$match = array('status' => 'waiting team assignment', 'winner' => false);
 				}
 				$this->matches[$this->getRoundId($r)][$i] = $match;
+				next($this->teams);
 			}
 			
 			$matchesThisRound = $matchesThisRound / 2;	//  Half the people lost...
 		}
 	}
 
-
+	/**
+	 * calculateMatches 
+	 * Calculate the max and min number of matches for the whole tournament.
+	 */
 	private function calculateMatches()
 	{
 		$this->setMinMatches();

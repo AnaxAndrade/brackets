@@ -21,8 +21,8 @@ class Home extends CI_Controller {
 	{
 		$this->load->model('Bracket','bracket');		
 		
-		// $testUsers = array(	'Fez', 'Stephen Hyde', 'Eric Forman', 'Laura Pinciotti', 'Redd Forman', 'Jackie Berkhart', 'Kitty Forman', 'Bob Pinciotti', 'Kelso', 'Leo', 'Nina', 'Laurie', 'Midge Pinciotti', 'Jimmy Page', 'Mila Kunis', 'Danny Masterson');
-		$testUsers = array(	'Fez', 'Stephen Hyde', 'Eric Forman', 'Laura Pinciotti', 'Redd Forman', 'Jackie Berkhart', 'Kitty Forman', 'Bob Pinciotti');
+		$testUsers = array(	'Fez', 'Stephen Hyde', 'Eric Forman', 'Laura Pinciotti', 'Redd Forman', 'Jackie Berkhart', 'Kitty Forman', 'Bob Pinciotti', 'Kelso', 'Leo', 'Nina', 'Laurie', 'Midge Pinciotti', 'Jimmy Page', 'Mila Kunis', 'Danny Masterson');
+		//$testUsers = array(	'Fez', 'Stephen Hyde', 'Eric Forman', 'Laura Pinciotti', 'Redd Forman', 'Jackie Berkhart', 'Kitty Forman', 'Bob Pinciotti');
 
 		$playersPerTeam = 1;
 		$maxLosses = 1;
@@ -32,6 +32,19 @@ class Home extends CI_Controller {
 		$this->bracket->advanceTeam(1, 'home');
 		$this->bracket->advanceTeam(2, 'away');
 		$this->bracket->advanceTeam(3, 'home');
+		$this->bracket->advanceTeam(4, 'away');
+		$this->bracket->advanceTeam(5, 'home');
+		$this->bracket->advanceTeam(6, 'away');
+		$this->bracket->advanceTeam(7, 'home');
+		$this->bracket->currentRound++;
+		$this->bracket->advanceTeam(0, 'away');
+		$this->bracket->advanceTeam(1, 'home');
+		$this->bracket->advanceTeam(2, 'away');
+		$this->bracket->advanceTeam(3, 'home');
+		$this->bracket->currentRound++;
+		$this->bracket->advanceTeam(0, 'away');
+		$this->bracket->advanceTeam(1, 'away');
+		
 		
 		$this->load->view('bracket_v');
 	}
