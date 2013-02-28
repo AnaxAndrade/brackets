@@ -1,0 +1,85 @@
+@import "reset";
+@import "variables";
+@import "mixins";
+@import "buttons";
+@import "typography";
+/*
+@import "tables";
+@import "modal";
+@import "forms";
+*/
+
+body {
+	background-color: $colorBackground;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+#stage {
+	position: relative;
+	background-color: #fbf9fc;
+	@include respond-to(desktop) {
+		margin: 20px auto;
+		width: 90%;
+		border: 1px solid #eae8eb;
+		@include box-shadow(0,1px,1px,0,#e1e0e3);
+	}
+	@include respond-to(tablet) {
+		margin: 0;
+		width: 100%;
+		border: 1px solid #eae8eb;
+	}
+	@include clearfix();
+}
+
+#bracket {
+	@include clearfix();
+	.round {
+		position: relative;
+		float: left;
+		width: 30%;
+		padding: 1%;
+		@include clearfix();
+		
+		@include respond-to(mobile) {
+			float: none;
+			width: 100%;
+		}
+		.title {
+			text-align: center;
+		}
+		.match {
+			margin: 15px 0;
+			background-color: #ffffff;
+			border-bottom: 1px solid #dfdfdf;
+			.side {
+				padding: 20px 7px;
+				h3 {
+					margin: 0 0 5px;
+					font-size: 11px;
+					text-align: center;
+					font-weight: normal;
+					text-transform: uppercase;
+					color: #919191;
+				}
+				p {
+					font-size: 14px;
+					text-align: center;
+				}
+				&.winner {
+					padding: 25px 7px;
+					background-color: #eaffff;
+				}
+				&.loser {
+					padding: 10px 7px;
+					background-color: #f9f5f8;
+					h3 {
+						color: #d7d3d6;
+					}
+					p {
+						color: #d7d3d6;
+					}
+				}
+			}
+		}	
+	}
+}
