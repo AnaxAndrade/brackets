@@ -7,6 +7,9 @@
 </head>
 <body>
 <div id="stage">
+	<?php if($bracket->results->winner()): ?>
+		<h1>Winner : <?=implode(', ',$bracket->results->winner())?></h1>
+	<?php endif; ?>
 	<div id="bracket">
 		<?php for($i=1;$i<=$bracket->rounds;$i++):?>
 			<div class="round">

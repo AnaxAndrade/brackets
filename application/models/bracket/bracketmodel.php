@@ -1,4 +1,7 @@
 <?php 
+namespace Bracket;
+
+use \MyModel as MyModel;
 
 class BracketModel extends MyModel {
 	
@@ -56,18 +59,18 @@ class BracketModel extends MyModel {
 		Number of losses it takes before the team is out of the tournament 
 	*/
 	protected $lossesRequired = 1;
+
+	/**
+	 * 	A result object of winners.  (work this out for double elim)
+	 */
+	protected $results;
 	
 	/* 
 		======================================================================== 
 	*/
-
-	public function __construct()
-	{ 
-		
-	} 
 	
 	/**
-	 * initialize 
+	 * __construct 
 	 * Initialize the bracket and draw teams.
 	 * 
 	 * @param array $playersArray An array of players by name string. Ex: array('Person Namerson', 'Harrison Namerson')
@@ -75,21 +78,55 @@ class BracketModel extends MyModel {
 	 * @param string $type Type of bracket.  singles or doubles.
 	 * @return
 	 */
-	public function initialize($playersArray, $playersPerTeam = 2, $lossesRequired = 2)
+	public function __construct($playersArray, $playersPerTeam = 2, $lossesRequired = 2)
 	{
 		$this->players = $playersArray;
 		$this->playerCount = count($this->players);
 		$this->playersPerTeam = $playersPerTeam;
-		$this->lossesRequired = $lossesRequired;
-		
-		// Pick Teams
-		$this->pickTeams();
-		
-		// Assign matches / rounds...  This could be held off to the controller.  So could pickTeams.
-		$this->createBracket();
-		
+		$this->lossesRequired = $lossesRequired;		
+
+		$this->results = new BracketResultsModel();
 	}
 	
+	/**
+	 * createBracket 
+	 * Create the bracket for the tournament.
+	 * 
+	 */
+	public function createBracket()
+	{
+		$this->calculateMatches();		
+		$this->setRoundCount();
+		$this->currentRound = 1;	// reset the current round to 1.  if needed...  doesn't hurt.
+
+		$matchesThisRound = $this->matchesForRound($this->currentRound); 	// number of matches for the first round.
+		
+		// assign matches for all rounds.
+		for($r=1;$r<=$this->rounds;$r++)
+		{	
+			for($i=0;$i<$matchesThisRound;$i++)
+			{
+				if($r===1)	// we can only assign the first round
+				{
+					$match = array(
+						'teams' => array(
+							'home' => current($this->teams),
+							'away' => next($this->teams) ? current($this->teams) : null
+						),
+						'winner' => false,
+						'status' => 'pending'
+					);
+				}else{
+					$match = array('status' => 'waiting team assignment', 'winner' => false);
+				}
+				$this->matches[$this->getRoundId($r)][$i] = $match;
+				next($this->teams);
+			}
+			
+			$matchesThisRound = $matchesThisRound / 2;	//  Half the people lost...
+		}
+	}
+
 	/* ! TEAMS */
 
 	/**
@@ -130,7 +167,6 @@ class BracketModel extends MyModel {
 	/**
 	 * getTeamPlayerNames 
 	 * Get the players from a given team
-	 
 	 THIS DOESNT WORK YET
 	 * 
 	 * @param int $teamIndex Index of the team from 'teams' property
@@ -149,7 +185,9 @@ class BracketModel extends MyModel {
 	 */
 	public function advanceTeam($matchIndex, $teamIndex)
 	{
-		// get the match and the
+		/*
+			Advance a team to the next round.  If the current round is the last round then we'll mark them the winner.
+		*/
 		if(isset($this->matches[$this->getRoundId($this->currentRound)][$matchIndex]['teams'][$teamIndex]))
 		{
 			$previousMatch = $this->matches[$this->getRoundId($this->currentRound)][$matchIndex];
@@ -169,12 +207,15 @@ class BracketModel extends MyModel {
 		/* 
 			if the current round is the last round then this team has won the championship... 
 			UNLESS
-			Unless it's double elimination.  A team with one loss could lose in the championship round.   
+			Unless it's double elimination.  
+			- A team with no losses could lose in the championship round and still be in.   
+			- A team witn one loss could win the first championship game and need to proceed to the next.
 		*/
-		if($this->currentRound === $this->rounds) 
+		if($this->currentRound == $this->rounds) 
 		{
-			// The champ.  sort of.
+			$this->results->setWinner($team);
 		}else{
+
 			// will need to set "home" or "away"
 			if(isset($this->matches[$this->getRoundId($this->currentRound+1)][$nextMatchIndex]))
 			{
@@ -219,12 +260,12 @@ class BracketModel extends MyModel {
 	
 	
 	/**
-	 * setRounds 
+	 * setRoundCount 
 	 * Set the rounds for the tournament given the number of teams.
 	 * Rounds ^ 2 = teamCount
 	 * 
 	 */
-	private function setRounds()
+	private function setRoundCount()
 	{
 		$this->rounds = ceil(log($this->teamCount, 2));
 	}
@@ -241,44 +282,6 @@ class BracketModel extends MyModel {
 	}
 	
 	/* ! Matches */
-
-	/**
-	 * createBracket 
-	 * Create the bracket for the tournament.
-	 * 
-	 */
-	private function createBracket()
-	{
-		$this->calculateMatches();		
-		$this->setRounds();
-		$this->currentRound = 1;	// reset the current round to 1.  if needed...  doesn't hurt.
-		$matchesThisRound = ceil(($this->playerCount/$this->playersPerTeam)/2); 	// number of matches for the first round.
-		
-		// assign matches for all rounds.
-		for($r=1;$r<=$this->rounds;$r++)
-		{	
-			for($i=0;$i<$matchesThisRound;$i++)
-			{
-				if($r===1)	// we can only assign the first round
-				{
-					$match = array(
-						'teams' => array(
-							'home' => current($this->teams),
-							'away' => next($this->teams) ? current($this->teams) : null
-						),
-						'winner' => false,
-						'status' => 'pending'
-					);
-				}else{
-					$match = array('status' => 'waiting team assignment', 'winner' => false);
-				}
-				$this->matches[$this->getRoundId($r)][$i] = $match;
-				next($this->teams);
-			}
-			
-			$matchesThisRound = $matchesThisRound / 2;	//  Half the people lost...
-		}
-	}
 
 	/**
 	 * calculateMatches 
@@ -308,4 +311,13 @@ class BracketModel extends MyModel {
 	{
 		$this->maxMatches = ($this->teamCount * $this->lossesRequired) - 1;
 	}	
+
+	/**
+	 * matchesForRound
+	 * Get the number of matches for a given round.
+	 */
+	public function matchesForRound($round)
+	{
+		return ceil(($this->playerCount/$this->playersPerTeam)/pow(2,$round));
+	}
 }
