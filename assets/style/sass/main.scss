@@ -9,6 +9,7 @@
 @import "forms";
 */
 
+
 body {
 	background-color: $colorBackground;
 	font-family: Helvetica, Arial, sans-serif;
@@ -82,4 +83,11 @@ body {
 			}
 		}	
 	}
+
+	#winner {
+		padding: 12px 0;
+		text-align: center;
+		background-color: #eaffff;
+		border-bottom: 1px solid #c9e0e7;
+	} 
 }

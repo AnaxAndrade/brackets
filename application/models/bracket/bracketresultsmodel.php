@@ -6,11 +6,11 @@ namespace Bracket;
  */
  class BracketResultsModel
  {
-  private $winner = false;
-  private $standings = false;
+    private $winner = false;
+    private $standings = array();
 
-  function __construct()
-  {
+    function __construct()
+    {
 
     }
 
@@ -32,6 +32,7 @@ namespace Bracket;
     public function setWinner($winnerArr)
     {
       $this->winner = $winnerArr;
+      $this->standings[0] = $winnerArr;
     }
 
     /**
