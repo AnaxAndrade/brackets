@@ -37,7 +37,7 @@ body {
 	.round {
 		position: relative;
 		float: left;
-		width: 30%;
+		width: 23%;
 		padding: 1%;
 		@include clearfix();
 		
@@ -49,22 +49,46 @@ body {
 			text-align: center;
 		}
 		.match {
-			margin: 15px 0;
-			background-color: #ffffff;
-			border-bottom: 1px solid #dfdfdf;
+			margin: 15px 0 25px;
+			@include box-shadow(0,1px,3px,0,#d4d4d4);
+			&.complete {
+				opacity: .3;
+			}
+			&:hover {
+				opacity: 1;
+			}
+			.emptyMatch {
+				padding: 30px 10px;
+				text-align: center;
+				text-transform: uppercase;
+				letter-spacing: .7em;
+				font-weight: bold;
+				background-color: #ffffff;
+			}
 			.side {
-				padding: 20px 7px;
-				h3 {
-					margin: 0 0 5px;
-					font-size: 11px;
+				padding: 30px 7px;
+				background-color: #ffffff;
+				h3 { 
+					margin: 0 0 10px;
+					font-size: 10px;
 					text-align: center;
 					font-weight: normal;
 					text-transform: uppercase;
-					color: #919191;
+					letter-spacing: .2em;
+					color: #4a4a4a;
 				}
 				p {
 					font-size: 14px;
 					text-align: center;
+				}
+				&.unassigned {
+					opacity: .4;
+				}
+				&.away {
+					border-top: 1px solid #ededed;
+				}
+				&.home {
+
 				}
 				&.winner {
 					padding: 25px 7px;

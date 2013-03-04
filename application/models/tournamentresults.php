@@ -1,18 +1,11 @@
 <?php 
-namespace Bracket;
-
 /**
  * Methods for bracket results.  Must exted the Bracket class
  */
- class BracketResultsModel
+ class TournamentResults
  {
     private $winner = false;
     private $standings = array();
-
-    function __construct()
-    {
-
-    }
 
     /**
      * Get the winner of the bracket if one exists
