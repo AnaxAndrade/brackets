@@ -1,5 +1,8 @@
 <?php 
 class Round extends Eloquent {
-	 public static $timestamps = false;
-	 public static $table = 'rounds';
+	
+	public function matches()
+	{
+		return $this->has_many('Match');
+	}
 }

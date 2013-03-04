@@ -9,9 +9,12 @@ class Bracket extends Eloquent {
 			return $this->has_many('Round');
 		}
 
-		public static function matches($id)
+		/*
+			Get all matches for bracket.
+		*/
+		public function matches()
 		{
-			return  DB::table(self::$table)->join('rounds', self::$table.'.id','=','rounds.bracket_id')->where(self::$table.'.id','=',$id)->get();
+			return  $this->has_many_and_belongs_to('Match');
 		}
 
 		/**
@@ -19,9 +22,9 @@ class Bracket extends Eloquent {
 		 *
 		 * @return array
 		 **/
-		public static function teams($id)
+		public function teams()
 		{
-			return DB::table(self::$table)->join('teams', self::$table.'.id','=','teams.bracket_id')->where(self::$table.'.id','=',$id)->get();
+			return $this->has_many('Team');
 		}
 
 		/**
@@ -32,18 +35,6 @@ class Bracket extends Eloquent {
 		public function players()
 		{
 			return $this->has_many_and_belongs_to('Player');
-
-			// $players = array();
-			// foreach(self::teams($id) as $t)
-			// {
-			// 	$playerArr = DB::table('teams_players')
-			// 				->join('players', 'teams_players.player_id','=','players.id')
-			// 				->where('teams_players.team_id','=',$t->id)
-			// 				->get();
-			// 	$players = array_merge($players, $playerArr);
-			// }
-			// return  $players;
-
 		}
 	
 	}

@@ -5,6 +5,11 @@ class Tournament extends MyModel {
 		Number of players in the tournament 
 	*/
 	protected $playerCount = 0;
+
+	/* 
+		Bracket object from the database
+	*/
+	protected $bracket;
 	
 	/* 
 		Number of teams in the tournament 
@@ -76,49 +81,88 @@ class Tournament extends MyModel {
 	 */
 	public function __construct(Bracket $bracket)
 	{
+		// bracket details
+		$this->bracket = $bracket;
 
-		// assign the players array. (ex. Bracket::find($id)->players)
-		$this->players = Bracket::find($bracket->id)->players;
-
-		// assign the number of players ()
-		$this->playerCount = count($this->players);
 		$this->playersPerTeam = $bracket->players_per_team;
 		$this->lossesRequired = $bracket->losses;		
+
+		// player details
+
+		$this->players = $bracket->players;
+		$this->playerCount = count($this->players);
+
+		// results oject
 		$this->results = new TournamentResults();
 	}
 	
 	/**
 	 * createBracket 
 	 * Create the bracket for the tournament.
+	 * This will add and associate all other fields / tables
 	 * 
 	 */
 	public function createBracket()
 	{
-		$this->calculateMatches();		
+		$this->setMinMatches();
+		$this->setMaxMatches();
 		$this->setRoundCount();
-		$this->currentRound = 1;	// reset the current round to 1.  if needed...  doesn't hurt.
-
-		$matchesThisRound = $this->matchesForRound($this->currentRound); 	// number of matches for the first round.
+		$this->currentRound = 1;
+		
+		/*
+			Calculate the number of matches for the first round.
+			All we need is the first round, every round after that is half the amount of matches as the previous. (for single elim)
+		*/
+		$matchesThisRound = $this->matchesForRound($this->currentRound);
 		
 		// assign matches for all rounds.
 		for($r=1;$r<=$this->rounds;$r++)
 		{	
+			/*
+				INSERT the round data into the database and associate it with the bracket.
+			*/
+			$round = Round::create(array(
+					'name' => $this->getRoundId($r),
+					'active' => ($r === 1 ? 1 : null)
+				)
+			);
+			// associate the new round with the existing bracket.
+			$this->bracket->rounds()->insert($round);
+			reset($this->teams); // start the array cursor over just in case.
+
 			for($i=0;$i<$matchesThisRound;$i++)
 			{
-				if($r===1)	// we can only assign the first round
+				$status = ($r===1 ? 'Ready to play' : 'Waiting for team assignment');
+				/*
+					Create the inital match.
+				*/
+				$match = Match::create(array('status' => $status));
+
+				/*
+					Associate the new match with the round.
+				*/
+				$round->matches()->insert($match);
+
+				/*
+					Associate this match with the current bracket...
+				*/
+				$this->bracket->matches()->attach($match);
+				
+				/*
+					We can assign matches for the first round.  
+					Here we are assigning teams by index.  
+					Example
+					team 1 vs team 2
+					team 3 vs team 4
+					team 4 vs team 6
+
+					Teams can be created at random using the pickTeams method.
+				*/
+				if($r===1)
 				{
-					$match = array(
-						'teams' => array(
-							current($this->teams), 
-							next($this->teams) ? current($this->teams) : null
-						),
-						'winner' => false,
-						'status' => 'pending'
-					);
-				}else{
-					$match = array('status' => 'waiting team assignment', 'winner' => false, 'teams' => array());
+					$match->teams()->attach(current($this->teams));
+					$match->teams()->attach(next($this->teams));
 				}
-				$this->matches[$this->getRoundId($r)][$i] = $match;
 				next($this->teams);
 			}
 			
@@ -151,17 +195,34 @@ class Tournament extends MyModel {
 		*/
 		for($i=0;$i<$this->playerCount;$i+=$this->playersPerTeam)
 		{
-			$team = array();	// temporary team array
-			array_push($team, current($this->players));
+			/*
+				Create the new team.  You could name it if you want... 
+			*/
+			$team = Team::create(array('name'=>date('F j, Y, g:i a') ));
 
+			/*
+				Add and associate the players to the team.
+			*/
+			$team->players()->attach(current($this->players));
+			
 			/*
 				If there are more than 1 players per team let's cycle through as many as needed and append them to the temporary team array.  
 				After the temporary team is created, add it to the object property for teams.
 			*/
 			for($k=1;$k<$this->playersPerTeam;$k++) { 
-				array_push($team, next($this->players));
+				$team->players()->attach(next($this->players));
 			}
-			array_push($this->teams, array_filter($team)); // filter false results due to remainders in team assignment. (too few players)
+
+			/*
+				Add the newly created team to the teams array.
+			*/
+			array_push($this->teams, $team);
+
+			/*
+				Associate the team with the bracket.
+			*/
+			$this->bracket->teams()->insert($team);
+
 			next($this->players);
 		}
 
@@ -172,7 +233,7 @@ class Tournament extends MyModel {
 	/**
 	 * getTeamPlayerNames 
 	 * Get the players from a given team
-	 THIS DOESNT WORK YET
+	 // THIS DOESNT WORK YET
 	 * 
 	 * @param int $winningTeamIndex Index of the team from 'teams' property
 	 * @return
@@ -250,6 +311,17 @@ class Tournament extends MyModel {
 		}
 	}
 
+	/* PLAYERS */
+	/**
+	 * Get all players for the current tournament.
+	 *
+	 * @return array
+	 **/
+	public function players()
+	{
+		return $this->players;
+	}
+
 	/* ! ROUNDS */
 
 	/**
@@ -317,15 +389,6 @@ class Tournament extends MyModel {
 	}
 
 	/**
-	 * calculateMatches 
-	 * Calculate the max and min number of matches for the whole tournament.
-	 */
-	private function calculateMatches()
-	{
-		$this->setMinMatches();
-		$this->setMaxMatches();
-	}
-	/**
 	 * setMinMatches 
 	 * Set the minimum number of matches possible for the tournament
 	 * 
@@ -375,14 +438,11 @@ class Tournament extends MyModel {
 	 *
 	 * @return void
 	 **/
-	public function setMatchStatus($matchIndex, $status, $round = false)
+	public function setMatchStatus($matchId, $status, $round = false)
 	{
-		if( ! $round) 
-		{
-			$round = $this->currentRound;
-		}
-
-		$this->matches[$this->getRoundId($round)][$matchIndex]['status'] = $status;
+		$match = Match::find($matchId);
+		$match->status = $status;
+		$match->save();
 	}
 
 	/**
@@ -390,13 +450,11 @@ class Tournament extends MyModel {
 	 *
 	 * @return void
 	 **/
-	public function setMatchWinner($matchIndex, $winnerIndex, $round = false)
+	public function setMatchWinner($matchId, $winningTeamId)
 	{
-		if( ! $round) 
-		{
-			$round = $this->currentRound;
-		}
-		$this->matches[$this->getRoundId($round)][$matchIndex]['winner'] = $winnerIndex;
+		$match = Match::find($matchId);
+		$match->winning_team_id = $winningTeamId;
+		$match->save();
 	}
 
 	/**
