@@ -8,52 +8,54 @@
 <body>
 <div id="stage">
 	<div id="bracket">
-		<?php if($tournament->results->winner()): ?>
+		<?php if($tournament): ?>
 		<div id="winner">
-			<h1>Winner : <?=implode(', ',$tournament->results->winner())?></h1>
+			<h1>Winner : </h1>
 		</div>
 		<?php endif; ?>
 
-		<?php for($i=1;$i<=$tournament->rounds();$i++):?>
+		<?php foreach($tournament->bracket->rounds as $round):?>
+
 			<div class="round">
-				<h2 class="title"><?=$tournament->getRoundId($i)?></h2>
+				<h2 class="title"><?=$round->name?></h2>
 				<hr />
-				<?php foreach($tournament->matches()[$tournament->getRoundId($i)] as $k => $match):?>
-					<div class="match <?=($match['winner'] !== false ? 'complete' : '')?>">
-					<?php if( ! isset($match['teams'])):  ?>
+				
+				<?php foreach($round->matches as $k => $match):?>
+					<div class="match <?=($match->completed_at ? 'complete' : '')?>">
+					
+					<?php if( ! $match->teams):  ?>
+					
 						<div class="emptyMatch">
 							<p>Match <?=$k+1?></p>
 						</div>
+					
 					<?php else: ?>
-						<div class="side home <?=(!isset($match['teams'][0])?'unassigned':'')?> <?=($match['winner'] === 0 ? 'winner' : ($match['winner'] === 1 ? 'loser' : ''))?>">
-							<h3>Home</h3>
-							<?php if(isset($match['teams'][0])): ?>
-							<p>
-								<?php foreach($match['teams'][0] as $index => $player): ?>
-									<?=$player->first_name.($player->last_name?' '.$player->last_name:'').($index+1 < count($match['teams'][0]) ? ', ': '')?>
-								<?php endforeach; ?>
-							</p>
-							<?php else: ?>
-								<p>NOT SET</p>
-							<?php endif; ?>
-						</div>
-						<div class="side away <?=(!isset($match['teams'][1])?'unassigned':'')?> <?=($match['winner'] === 1 ? 'winner' : ($match['winner'] === 0 ? 'loser' : ''))?>">
-							<h3>Away</h3>
-							<?php if(isset($match['teams'][1])): ?>
-							<p>
-								<?php foreach($match['teams'][1] as $index => $player): ?>
-									<?=$player->first_name.($player->last_name?' '.$player->last_name:'').($index+1 < count($match['teams'][1]) ? ', ': '')?>
-								<?php endforeach; ?>
-							</p>
-							<?php else: ?>
-								<p>NOT SET</p>
-							<?php endif; ?>
-						</div>
+					
+						<?php for($i=0;$i<2;$i++): ?>
+							<div class="side <?=$i==0?'home':'away'?> <?=(!isset($match->teams[$i])?'unassigned':'')?> <?=($match->winning_team_id == $match->teams[$i]->id ? 'winner' : '')?>">
+								<h3><?=$i==0?'Home':'Away'?></h3>								
+								<?php if(isset($match->teams[$i])): ?>
+									<p>
+										<?php foreach($match->teams[$i]->players as $index => $player): ?>
+											<?=$player->first_name.($player->last_name?' '.$player->last_name:'').($index+1 < count($match->teams[$i]->players) ? ', ': '')?>
+										<?php endforeach; ?>
+									</p>
+								<?php else: ?>
+									<p>NOT SET</p>
+								<?php endif; ?>
+							</div>						
+						<?php endfor; ?>
+					
 					<?php endif; ?>
+					
 					</div>
+				
 				<?php endforeach; ?>
+			
 			</div>
-		<?php endfor; ?>
+		
+		<?php endforeach; ?>
+	
 	</div>
 </div>
 

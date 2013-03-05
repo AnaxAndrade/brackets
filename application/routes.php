@@ -1,12 +1,19 @@
 <?php
 
-Route::get('/', function()
-{
-	return View::make('home.index');
-});
+/*
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+|
+| Routes for the main application.  
+| - Route::controller(Controller::detect());  - registers all controllers
+| - Route::controller('home');  - register the home controller
+| - Route::get('/', 'home@index');  - send traffic going to / to 'Home' controller 'action_index' method
+|
+*/
 
-Route::controller('bracket');
-
+Route::get('/', 'home@index');				// Use the 'Home' controller and the 'action_index' method.
+Route::controller(Controller::detect());	// Register all controllers.
 
 /*
 |--------------------------------------------------------------------------

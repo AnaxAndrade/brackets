@@ -1,9 +1,9 @@
 <?php 
 class Bracket extends Eloquent {
-
-		public static $timestamps = false;
-		public static $table = 'brackets';
-
+		
+		/*
+			Get all rounds for the current bracket.
+		*/
 		public function rounds()
 		{
 			return $this->has_many('Round');
@@ -25,6 +25,16 @@ class Bracket extends Eloquent {
 		public function teams()
 		{
 			return $this->has_many('Team');
+		}
+
+		/**
+		 * Get the current round object for the bracket
+		 *
+		 * @return Round
+		 **/
+		public function currentRound()
+		{
+			return $this->belongs_to('Round', 'current_round');
 		}
 
 		/**
