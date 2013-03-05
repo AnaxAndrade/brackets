@@ -70,7 +70,7 @@ class Tournament extends MyModel {
 			$this->bracket->teams()->insert($team);
 		}
 
-		return count($this->teams);
+		return count($this->bracket->teams());
 	}
 	
 	/* BRACKET */
@@ -88,6 +88,7 @@ class Tournament extends MyModel {
 			All we need is the first round, every round after that is half the amount of matches as the previous. (for single elim)
 		*/
 		$matchesThisRound = $this->firstRoundMatches();
+		$teams = $this->bracket->teams;
 		
 		// assign matches for all rounds.
 		for($r=1;$r<=$this->getRoundCount();$r++)
@@ -96,7 +97,7 @@ class Tournament extends MyModel {
 				INSERT the round data into the database and associate it with the bracket.
 			*/
 			$round = Round::create(array(
-					'name' => $this->getRoundId($r),
+					'name' => $this->getRoundName($r),
 					'index' => $r
 				)
 			);
@@ -140,10 +141,7 @@ class Tournament extends MyModel {
 				*/
 				if($r===1)
 				{
-					$teams = $this->bracket->teams;
-					/*
-						Add two teams to the match.
-					*/
+					/*	Add two teams to the match.		*/
 					for($c=0;$c<2;$c++)
 					{
 						if(current($teams)) {
@@ -168,41 +166,61 @@ class Tournament extends MyModel {
 	 * @param Team index for the current round
 	 * @return Match
 	 */
-	public function advanceTeam($matchId, $teamId)
+	public function advanceTeam(Match $match, Team $team)
 	{
 		/*
-			Bracket variables
+			Thought process...
+
+			The match passed was won by the team passed.
+			- Mark this team as the winner of the match.
+			- Change the status to complete.
+			- Does the round need to auto advance to the next round? (are all matches for this round complete?)
+			- What is the next game that this team should play?
+				-- Is there a next game?  If not, is this the champion?  We could be dealing with a champion here people.  A champion.
 		*/
-		$match = Match::find($matchId);
-		$team = Team::find($teamId);
-		$rounds = $this->bracket->rounds()->get();
+
+		$rounds = $this->bracket->rounds;		// Easy access bruh
+		$currentRound = $match->round;			// 2Easy2Sleazy
+		$nextMatch = false;						// we may not need a next match at all if it's a champ.
 
 		/*
 			UPDATE completed_at and insert the winning_team_id
 		*/
 		$this->setMatchWinner($match, $team);
-		$this->setMatchStatus($match, 'complete');
+		$this->setMatchStatus($match, 'Complete');
 
 		/* 
-			If the current round is the last round 
-				dthen this team has won the championship... 
-			UNLESS
-			Unless it's double elimination.  
-			- A team with no losses could lose in the championship round and still be in.   
-			- A team witn one loss could win the first championship game and need to proceed to the next.
+			Is this the last round?
 		*/
-		if($this->bracket->current_round == count(rounds)) 
+		if($currentRound->index == count($rounds)) 
 		{
-				$this->bracket->winning_team_id = $team->id;
-				$this->bracket->save();
+			/*
+				It is the last round so let's declare this team the winner.
+			*/
+			$this->bracket->winning_team_id = $team->id;
+			$this->bracket->save();
 		}else{
+			/*
+				Should we shift the bracket's current round to the next round
+			*/
+			$this->advanceRound($currentRound);
+
+			/*
+				Get the next match.
+			*/
 			$nextMatch = $this->nextMatch($match);
+
+			// is this team already up for the next match?
+			foreach($nextMatch->teams as $t)
+			{
+				if($t->id == $team->id) return $nextMatch;
+			}
 
 			// add the winning team to the next match and see how many teams are now assigned to the next match.
 			$nextMatch->teams()->attach($team);
 
 			// is there already a team assigned to the next match?
-			$status = ($nextMatch->teams()->count() == $this->bracket->players_per_team) ? 'ready to play' : 'waiting for opponent';
+			$status = ($nextMatch->teams()->count() == $this->bracket->players_per_team) ? 'Ready to play' : 'Waiting for opponent';
 			$this->setMatchStatus($nextMatch, $status);
 		}
 
@@ -212,13 +230,13 @@ class Tournament extends MyModel {
 	/* ! ROUNDS */
 
 	/**
-	 * getRoundId 
+	 * getRoundName 
 	 * Quick way to get the "name" of the round based on current round param.
 	 * 
 	 */
-	public function getRoundId($r)
+	public function getRoundName($r)
 	{
-		$rounds = count($this->bracket->rounds);
+		$rounds = $this->getRoundCount();
 
 		if($r == $rounds){
 			return 'Finals';
@@ -244,6 +262,7 @@ class Tournament extends MyModel {
 	/**
 	 * nextRound 
 	 * Returns false if there is no next round (you're in the championship round.)
+	 * Get the round that is one index higher than the current round.
 	 * 
 	 * @param Round $round Current round.
 	 * @return Round
@@ -253,6 +272,35 @@ class Tournament extends MyModel {
 		return Round::where('bracket_id','=',$round->bracket()->first()->id)->where('index','=',($round->index + 1))->first();
 	}
 
+	/**
+	 * Move the bracket's current_round marker to the next round.
+	 *
+	 * @return Round $nextRound The next (now current) round object.
+	 **/
+	public function advanceRound(Round $currentRound)
+	{
+		$roundInProgress = false;
+		$nextRound = false;
+
+		/*
+			Are all the matches for this round completed?
+		*/
+		foreach($currentRound->matches as $m)
+		{
+			if( ! $m->completed_at) $roundInProgress = true;
+		}
+
+		if( ! $roundInProgress){
+			$nextRound = $this->nextRound($currentRound);
+			if($nextRound)
+			{		
+				$this->bracket->current_round = $nextRound->id;
+				$this->bracket->save();
+			}
+		}
+
+		return $nextRound;
+	}
 	/* ! Matches */
 
 	/**
@@ -287,34 +335,32 @@ class Tournament extends MyModel {
 	/**
 	 * Get the next match based off of the match that was just completed.
 	 *
-	 * @param Match $completedMatch
+	 * @param Match $currentMatch
 	 * @return Match $nextMatch THe next match object.	
 	 **/
-	public function nextMatch(Match $completedMatch)
+	public function nextMatch(Match $currentMatch)
 	{
 		// Current Round
-		$round = $completedMatch->round;
+		$round = $currentMatch->round;
 		$index = false;
-		$roundComplete = true;
 
-		if(!$index = array_search($completedMatch, $round->matches))
+		// Baerf
+		foreach($round->matches as $i => $m)
 		{
-			return false;
-		}
-		/*
-			If all matches in this round are complete then let's set the bracket's current round to the new round.
-		*/
-		if($roundComplete)
-		{
-
+			if($m->id == $currentMatch->id) 
+			{
+				$index = $i;
+			}
 		}
 
+		// if it doesn't have an index for some reason then error out.
+		if($index === false){ return false; }
+		
+		// the next match index in the next round of the winners bracket is the index / 2;
 		$index = floor($index / 2);
-		/*
-			Get the next round
-		*/
-		$nextRound = $this->nextRound($round);
-		$nextRoundMatches = $nextRound->matches();
+		
+		// Get the next round matches
+		$nextRoundMatches = $this->nextRound($round)->matches;
 
 		return isset($nextRoundMatches[$index]) ? $nextRoundMatches[$index] : false;
 	}

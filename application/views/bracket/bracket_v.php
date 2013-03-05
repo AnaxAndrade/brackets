@@ -8,9 +8,9 @@
 <body>
 <div id="stage">
 	<div id="bracket">
-		<?php if($tournament): ?>
+		<?php if($winner = $tournament->bracket->winner): ?>
 		<div id="winner">
-			<h1>Winner : </h1>
+			<h1>Winner : <?=$winner->playerNames()?></h1>
 		</div>
 		<?php endif; ?>
 
@@ -32,7 +32,7 @@
 					<?php else: ?>
 					
 						<?php for($i=0;$i<2;$i++): ?>
-							<div class="side <?=$i==0?'home':'away'?> <?=(!isset($match->teams[$i])?'unassigned':'')?> <?=($match->winning_team_id == $match->teams[$i]->id ? 'winner' : '')?>">
+							<div class="side <?=$i==0?'home':'away'?> <?=(!isset($match->teams[$i])?'unassigned':'')?> <?=($match->winning_team_id == @$match->teams[$i]->id ? 'winner' : '')?>">
 								<h3><?=$i==0?'Home':'Away'?></h3>								
 								<?php if(isset($match->teams[$i])): ?>
 									<p>

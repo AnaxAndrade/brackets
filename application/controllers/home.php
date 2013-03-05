@@ -3,9 +3,10 @@ class Home_Controller extends Base_Controller
 {
 	public function action_index()
 	{
-		$bracket = Bracket::find(1);
+		$bracket = Bracket::find(1);		
 		$tournament = New Tournament($bracket);
 
+		// $tournament->developer();
 		return View::make('bracket/bracket_v', array('tournament'=>$tournament));
 	}
 

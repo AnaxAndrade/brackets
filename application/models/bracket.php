@@ -38,6 +38,28 @@ class Bracket extends Eloquent {
 		}
 
 		/**
+		 * Get the winner of the bracket if their is one
+		 *
+		 * @return Round
+		 **/
+		public function winner()
+		{
+			return $this->belongs_to('Team', 'winning_team_id');
+		}
+
+
+		/**
+		 * undocumented function
+		 *
+		 * @return void
+		 * @author 
+		 **/
+		public function advanceRound()
+		{
+
+		}
+
+		/**
 		 * Get all players for a bracket from bracket ID.
 		 *
 		 * @return array
@@ -46,5 +68,7 @@ class Bracket extends Eloquent {
 		{
 			return $this->has_many_and_belongs_to('Player');
 		}
+
+
 	
 	}
