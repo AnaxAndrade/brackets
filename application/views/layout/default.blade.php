@@ -16,8 +16,10 @@
 <body>
     <?php if( ! isset($hideMenuBar)): ?>
     <header>
+        <div class="wrapper">
         @yield('headerBtn')
-        <!-- <h1><?=(isset($bracket->name) ? $bracket->name : 'BRACKET')?></h1> -->
+        <h1>BRACKET</h1>
+        </div>
     </header>
     <?php endif; ?>
     @yield('content')

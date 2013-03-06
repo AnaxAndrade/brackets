@@ -28,9 +28,25 @@ header {
 	top: 0;
 	left: 0;
 	right: 0;
-	padding: 7px 10px;
-	@include box-shadow(0, 1px, 1px, 0, darken($colorLight, 20%));
-	@include gradient($colorLight, darken($colorLight, 6%));
+	@include gradient($colorBackground, darken($colorBackground,1%));
+	border-bottom: 1px solid darken($colorLight, 6%);
+	// @include box-shadow(0, 1px, 1px, 0, darken($colorLight, 0%));
+	// @include gradient($colorLight, darken($colorLight, 6%));
+	.wrapper {
+		padding: 7px 10px;
+		@include clearfix();
+		@include respond-to(desktop) {
+			margin: 0 auto;
+			width: $mediaTabletLandscape;
+		}
+		@include respond-to(tablet-landscape) {
+			margin: 0 auto;
+			width: $mediaTabletPortrait;
+		}
+		@include respond-to(mobile) {
+
+		}
+	}
 	h1 {
 		width: 50%;
 		margin-left: 25%;
@@ -45,10 +61,11 @@ header {
 	width: auto;
 	@include respond-to(desktop) {
 		margin: 0 auto;
-		width: 90%;
+		width: $mediaTabletLandscape;
 	}
-	@include respond-to(tablet) {
-
+	@include respond-to(tablet-landscape) {
+		margin: 0 auto;
+		width: $mediaTabletPortrait;
 	}
 	@include respond-to(mobile) {
 
