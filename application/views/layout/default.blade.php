@@ -22,6 +22,17 @@
         </div>
     </header>
     <?php endif; ?>
-    @yield('content')
+
+    <div id="stage">
+        <?php if(Session::has('error')): ?>
+            <div class="alert error">
+                <button class="close">Close</button>
+                <h4>Warning</h4>
+                <p><?=Session::get('error')?></p>
+            </div>
+        <?php endif; ?>
+
+       @yield('content')
+    </div>
 </body>
 </html>

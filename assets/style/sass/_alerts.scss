@@ -1,0 +1,46 @@
+.alert {
+	position: relative;
+	margin: 10px 0;
+	padding: 15px;
+	@include clearfix();
+	@include border-radius(5px);
+
+	&.error {
+		background-color: lighten($colorError, 40%);
+		border: 1px solid lighten($colorError, 30%);
+		h4, p {
+			color: darken($colorError, 50%);
+		}
+	}
+
+	button.close {
+		position: absolute;
+		display: block;
+		top: 10px;
+		right: 10px;
+		width: 24px;
+		height: 24px;
+		background: transparent url('/public/img/close-med.png') center center no-repeat;
+		opacity: .5;
+		@include hideText();
+		&:hover {
+			opacity: 1;
+		}
+	}
+	h4 {
+		float: left;
+		margin: 0 10px 0 0;
+		font-size: 1.4em;
+		font-weight: bold;
+		line-height: 1em;
+	}
+	p {
+		margin: 0;
+		font-size: 1.4em;
+		font-weight: normal;
+		line-height: 1em;
+	}
+	a {
+		color: darken($colorPrimary, 20%);
+	}
+}

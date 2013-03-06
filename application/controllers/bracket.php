@@ -13,12 +13,7 @@ class Bracket_Controller extends Base_Controller
 		return View::make('bracket/bracket_v', array('tournament'=>$tournament));
 	}
 
-	/**
-	 * Create a new bracket.
-	 * This bracket has no players. It is the shell bracket with tournament settings.
-	 *
-	 * @return void
-	 **/
+	/*  Create a new bracket */
 	public function post_create()
 	{
 		$bracket = new Bracket;
@@ -40,11 +35,7 @@ class Bracket_Controller extends Base_Controller
 		}
 	}
 
-	/**
-	 * Add players to the bracket.
-	 *
-	 * @return void
-	 **/
+	/* Add players to the bracket. */
 	public function get_add_players()
 	{
 		$bracket = Bracket::find(Session::get('bracketId'));
@@ -53,7 +44,7 @@ class Bracket_Controller extends Base_Controller
 		return View::make('bracket/add_players', array('bracket'=>$bracket));
 	}
 
-	/** Create a new player via POST and associate it with the current bracket. */
+	/* Create a new player via POST and associate it with the current bracket. */
 	public function post_create_player()
 	{
 		$failUri = 'bracket/add_players';
@@ -93,25 +84,27 @@ class Bracket_Controller extends Base_Controller
 
 		// If the bracket doesn't exist
 		// redirect back on home
-		if( ! $bracket){ return Redirect::home(); }
+		if( ! $bracket)
+		{
+			return Redirect::home(); 
+		}
 		
 		// if there are no players 
 		// redirect to add players
-		if(! $bracket->players){
-			return Redirect::to('bracket/add_players');
+		if(! $bracket->players)
+		{
+			return Redirect::to('bracket/add_players')->with('error','You do not have enough players to make a bracket.');;
 		}
 
 		// Create the tournament object from the bracket.
 		$tournament = new Tournament($bracket);
 
 		// Pick teams for the tournament.
-		$teamCount = $tournament->pickTeams();
-
-		if($teamCount > 1)
+		if($teamCount = $tournament->pickTeams())
 		{
 			return Redirect::to('bracket/teams');
 		}else{
-			return Redirect::to('bracket/add_players');
+			return Redirect::to('bracket/add_players')->with('error','You do not have enough players to make a bracket.');
 		}
 	}
 
@@ -127,4 +120,70 @@ class Bracket_Controller extends Base_Controller
 		// $this->layout->nest('content', 'bracket/teams_v', array('bracket'=>$bracket));
 		return View::make('bracket/teams', array('bracket'=>$bracket));
 	}
+
+	/* Generate the tournament bracket for a bracket with teams in place */
+	public function get_generate_tournament()
+	{
+		$bracket = Bracket::find(Session::get('bracketId'));
+	
+		// If the bracket doesn't exist
+		// redirect back on home
+		if( ! $bracket){ return Redirect::home(); }
+
+		// if there are no players 
+		// redirect to add players
+		if(! $bracket->players){
+			return Redirect::to('bracket/add_players')->with('error','You do not have enough players to make a bracket.');;
+		}
+		
+		// if there are no players 
+		// redirect to add players
+		if(! $bracket->teams){
+			return Redirect::to('bracket/add_players')->with('error','Pick teams to generate a new tournament bracket.');;
+		}
+
+		// create the tournament object
+		$tournament = new Tournament($bracket);
+
+		// build the bracket and update the DB.
+		$tournament->buildBracket();
+
+		return Redirect::to('bracket/tournament');
+	}
+
+	// View the tournament bracket for an existing tournament.
+	public function get_tournament()
+	{
+		$bracket = Bracket::find(Session::get('bracketId'));
+
+		// If the bracket doesn't exist
+		// redirect back on home
+		if( ! $bracket){ return Redirect::home(); }
+
+		$tournament = new Tournament($bracket);
+
+		return View::make('bracket/bracket', array('bracket' => $bracket, 'tournament' => $tournament));
+	}
+
+	// Set match winner
+	public function get_set_match_winner($matchId, $teamId)
+	{
+		$bracket = Bracket::find(Session::get('bracketId'));
+		$match = Match::find($matchId);
+		$team = Team::find($teamId);
+
+		// If the bracket doesn't exist
+		// redirect back on home
+		if( ! $bracket){ return Redirect::home(); }
+		if( ! $match or ! $team){ return Redirect::to('bracket/tournament'); }
+
+		// Create the tournament object
+		$tournament = new Tournament($bracket);
+
+		// advance this team to the next round or declare them the champ.
+		$tournament->advanceTeam($match, $team);
+
+		return Redirect::to('bracket/tournament');
+	}
+
 }

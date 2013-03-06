@@ -35,15 +35,17 @@ class Tournament extends MyModel {
 	{
 		$players = $this->bracket->players;
 
-		/* 
-			Setting the var random to true will shuffle the array of players.  
-			Otherwise it will be a first second, third fourth, in order. 
-		*/
+		// Are there enough teams for a tournament?
+		if(ceil(count($players) / $this->bracket->players_per_team) < 2)
+		{
+			return null;
+		}
+
+		// Setting the var random to true will shuffle the array of players.  
+		// Otherwise it will be a first second, third fourth, in order. 
 		if($random) shuffle($players); 	// put the players in a random order to assign them.
 
-		/*
-			DELETE any existing teams in the bracket.  We're drawing new teams heeeaaahhhhhh
-		*/
+		// DELETE any existing teams in the bracket.  We're drawing new teams heeeaaahhhhhh
 		$this->bracket->teams()->delete();
 
 		for($i=0;$i<count($players);$i+=$this->bracket->players_per_team)
@@ -90,58 +92,44 @@ class Tournament extends MyModel {
 		$matchesThisRound = $this->firstRoundMatches();
 		$teams = $this->bracket->teams;
 		
-		// assign matches for all rounds.
+		// assign matches for all rounds.	
 		for($r=1;$r<=$this->getRoundCount();$r++)
 		{	
-			/*
-				INSERT the round data into the database and associate it with the bracket.
-			*/
+
+			// INSERT the round data into the database and associate it with the bracket.
 			$round = Round::create(array(
 					'name' => $this->getRoundName($r),
 					'index' => $r
 				)
 			);
+
 			// associate the new round with the existing bracket.
 			$this->bracket->rounds()->insert($round);
 
-			/* If this is the first round let's make it the "current_round", in the bracket table */
+			// If this is the first round let's make it the "current_round", in the bracket table.
 			if($r === 1){
 				$this->bracket->current_round = $round->id;
 				$this->bracket->save();
-				$status = 'Ready to play';
-			}else{
-				$status = 'Waiting for team assignment';
 			}
 
 			for($i=0;$i<$matchesThisRound;$i++)
 			{
-				/*
-					Create the inital match.
-				*/
-				$match = Match::create(array('status' => $status));
+				// Create the match.
+				$match = Match::create(array(
+						'status' => ($r === 1) ? 'Ready to play' : 'Waiting for team assignment'
+					)
+				);
 
-				/*
-					Associate the new match with the round.
-				*/
+				// Associate the new match with the round.
 				$round->matches()->insert($match);
 
-				/*
-					Associate this match with the current bracket...
-				*/
+				// Also associate the match with the current bracket.
 				$this->bracket->matches()->attach($match);
 				
-				/*
-					We can assign matches for the first round.  
-					Here we are assigning teams by index.  
-					Example
-					team 1 vs team 2
-					team 3 vs team 4
-
-					Teams can be created at random using the pickTeams(true) method.
-				*/
+				// If this is the first round then we can assign teams to the match.
 				if($r===1)
 				{
-					/*	Add two teams to the match.		*/
+					// Add two teams to the match.
 					for($c=0;$c<2;$c++)
 					{
 						if(current($teams)) {
@@ -154,6 +142,8 @@ class Tournament extends MyModel {
 			
 			$matchesThisRound = $matchesThisRound / 2;	//  Half the people lost...
 		}
+
+		return count($this->bracket->matches);
 	}
 
 	/* ! TEAMS */
