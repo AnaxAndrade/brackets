@@ -1,0 +1,60 @@
+form {
+	fieldset {
+		padding: 10px 0;
+	}
+	label {
+		display: block;
+		margin-top: 4px 0;
+		font-size: 14px;
+	}
+	input {
+		margin: 0;
+		padding: .8em;
+		font-size: 12px;
+		border: 1px solid #c6c6c6;
+		width: 100%;
+		-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	    box-sizing: border-box; 
+
+		@include border-radius(3px);
+
+		&[type=email] {
+			
+		}
+		&[type=password] {
+			
+		}
+		&[type=email] {
+			
+		}
+		&[type=submit] {
+			@extend .btn;
+			cursor: pointer;
+			font-size: 12px;
+		}
+		&.sm {
+			padding: .6em;
+		}
+		&.med {
+			padding: 1em;
+			font-size: 14px;
+		}
+		&.lg {
+			padding: 1.6em 1em;
+			font-size: 1.8em;
+		}
+	}
+	textarea {
+		margin-top: 3px 0;
+		padding: 6px;
+		font-size: 12px;
+		line-height: 1.2;
+		border: 1px solid #c6c6c6;
+		width: 96%;
+	}
+	select {
+		margin: 7px 0;
+		padding: 7px;
+	}
+}

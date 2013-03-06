@@ -16,6 +16,49 @@ h3 {
 	font-weight: bold;
 	color: #515151;
 }
+p {
+	margin: 7px 0;
+	font-size: 13px;
+	line-height: 1.2;
+	color: #515151;
+}
+a {
+	text-decoration: none;
+	color: $colorLink;
+	&:hover {
+		color: darken($colorLink, 15%);
+	}
+}
+
+.label {
+	display: inline;
+	padding: .1em .4em .2em .4em;
+	color: #ffffff;
+	font-weight: normal;
+	background-color: lighten($colorPrimary, 17%);
+	@include border-radius(6px);
+}
+
+/*
+	I think HR counts as typography... suck on that.
+*/
+hr {
+	position: relative;
+	margin: 10px 0;
+	padding: 0;
+	height: 1px;
+	border: none;
+	background-color: #7f7f7f;
+	@include clearfix();
+
+	&.sm {
+		margin: 6px 0;
+	}
+	&.lg {
+		margin: 20px 0;
+	}
+}
+
 code {
 	position: relative;
 	display: block;

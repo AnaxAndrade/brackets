@@ -1,39 +1,109 @@
 @import "reset";
 @import "variables";
 @import "mixins";
+@import "structure";
 @import "buttons";
 @import "typography";
+@import "forms";
+
 /*
 @import "tables";
 @import "modal";
-@import "forms";
 */
 
+.floatleft { float: left; }
+.floatright { float: right; }
+.clearfix { @include clearfix(); }
+.center { text-align: center; }
 
 body {
 	background-color: $colorBackground;
 	font-family: Helvetica, Arial, sans-serif;
+	font-size: 10px; // 1em;
+}
+
+header {
+	position: fixed;
+	z-index: 10;
+	top: 0;
+	left: 0;
+	right: 0;
+	padding: 7px 10px;
+	@include box-shadow(0, 1px, 1px, 0, darken($colorLight, 20%));
+	@include gradient($colorLight, darken($colorLight, 6%));
+	h1 {
+		width: 50%;
+		margin-left: 25%;
+		text-align: center;
+		text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+	}
 }
 
 #stage {
 	position: relative;
-	background-color: #fbf9fc;
+	padding: 60px 20px 20px;
+	width: auto;
 	@include respond-to(desktop) {
-		margin: 20px auto;
+		margin: 0 auto;
 		width: 90%;
-		border: 1px solid #eae8eb;
-		@include box-shadow(0,1px,1px,0,#e1e0e3);
 	}
 	@include respond-to(tablet) {
-		margin: 0;
-		width: 100%;
-		border: 1px solid #eae8eb;
+
+	}
+	@include respond-to(mobile) {
+
 	}
 	@include clearfix();
 }
 
+#mainTitle {
+	padding: 0 0 20px;
+	h1 {
+		margin: 0 0 20px;
+		text-align: center;
+		font-size: 40px;
+		color: darken($colorPrimary, 30%);
+		text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+	}
+	h2 {
+		margin: 0;
+		text-align: center;
+		font-size: 18px;
+		text-transform: uppercase;
+		color: $colorDark;
+	}
+	p {
+		margin: 10px auto;
+		width: 80%;
+		text-align: center;
+		line-height: 1.4em;
+	}
+}
+
 #bracket {
 	@include clearfix();
+
+	.playerList {
+
+		h3 {
+			float: left;
+		}
+		li {
+			@include clearfix;
+			.options {
+				float: right;
+			}
+			.listRemove {
+				margin: 5px;
+				width: 16px;
+				height: 16px;
+				background: transparent url('/public/img/close-med.png') center center no-repeat;
+				opacity: .2;
+				@include hideText();
+			}
+		}
+	}
+
 	.round {
 		position: relative;
 		float: left;
@@ -114,4 +184,10 @@ body {
 		background-color: #eaffff;
 		border-bottom: 1px solid #c9e0e7;
 	} 
+}
+#createBracketPlayerForm {
+	@include clearfix();
+	fieldset:first-child {
+		margin-right: .5em;
+	}
 }

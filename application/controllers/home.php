@@ -3,11 +3,10 @@ class Home_Controller extends Base_Controller
 {
 	public function action_index()
 	{
-		$bracket = Bracket::find(1);		
-		$tournament = New Tournament($bracket);
+		// does the session already exist?
+		$bracket = Bracket::find(Session::get('bracketId'));
 
-		// $tournament->developer();
-		return View::make('bracket/bracket_v', array('tournament'=>$tournament));
+		return View::make('home/index', array('bracket'=>$bracket, 'hideMenuBar' => true));
 	}
 
 	public function action_demo()

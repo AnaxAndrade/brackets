@@ -17,6 +17,7 @@ class Create_Bracket {
 		    $table->string('name')->nullable();
 		    $table->integer('players_per_team');
 		    $table->integer('losses');
+		    $table->string('access_str')->unique();
 		    $table->integer('current_round')->nullable();
 		    $table->integer('winning_team_id')->unsigned()->nullable();
 		    $table->timestamps();

@@ -13,7 +13,8 @@
 */
 
 Route::get('/', 'home@index');				// Use the 'Home' controller and the 'action_index' method.
-Route::controller(Controller::detect());	// Register all controllers.
+Route::controller('home');		// 
+Route::controller('bracket');	// 
 
 /*
 |--------------------------------------------------------------------------

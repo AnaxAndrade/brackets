@@ -41,6 +41,42 @@
 	&:after { clear: both; }  
 }
 
+/* BUTTONS */
+@mixin btnStructure($padding: 1.2em, $width: auto, $fontSize: 1.2em, $borderRadius: 3px)
+{
+	display: block;
+	margin: 0;
+	padding: $padding;
+	width: $width;
+	text-align: center;
+	font-size: $fontSize;
+	cursor: pointer;
+	@include border-radius($borderRadius);
+}
+@mixin btnColors($mainColor, $fontColor: $colorLight)
+{
+	border: 1px solid darken($mainColor, 6%);
+	color: $fontColor;
+	@include gradient($mainColor, darken($mainColor, 7%));
+	@include box-shadow(1px, 1px, 1px, 0, lighten($mainColor, 20%), inset);
+	@include text-shadow(0, -1px, 0, rgba(0, 0, 0, 0.09));
+	@include border-radius(3px);
+	&:hover {
+		$increment : 5;
+		@include gradient(darken($mainColor, $increment + 0%), darken($mainColor, ($increment + 10%)));
+		@include box-shadow(1px, 1px, 1px, 0, $mainColor, inset);
+		border: 1px solid darken($mainColor, 9%);
+		color: $fontColor;
+	}
+}
+
+@mixin hideText(){
+	display: block;
+	overflow: hidden;
+	text-indent: -99999px; 
+}
+
+/* RESPONSIVE */
 @mixin respond-to($media) {
 	/* 
 		mobile

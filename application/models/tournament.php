@@ -70,7 +70,7 @@ class Tournament extends MyModel {
 			$this->bracket->teams()->insert($team);
 		}
 
-		return count($this->bracket->teams());
+		return count($this->bracket->teams);
 	}
 	
 	/* BRACKET */

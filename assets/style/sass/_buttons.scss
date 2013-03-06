@@ -1,5 +1,33 @@
 .btn {
-	display: block;
-	background-color: #e2e0e3;
+	@include btnColors($colorPrimary, $colorLight); // -- base button color, font color
+	@include btnStructure(1.2em, auto, 1.2em, 3px); // -- padding, width, font-size, border-radius
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box; 
+    
+	&.notice {
+		@include btnColors($colorNotice);
+	}
+	&.error {
+		@include btnColors($colorError);
+	}
+	&.info {
+		@include btnColors($colorInfo);
+	}
+	&.success {
+		@include btnColors($colorSuccess);
+	}
+	&.dark {
+		@include btnColors($colorDark, $colorLight);
+	}
+	&.light {
+		@include btnColors($colorLight, $colorDark);
+	}
+
+	&.sm {
+		@include btnStructure(1em, auto, 1.1em);
+	}
+	&.lg {
+		@include btnStructure(1.4em 1.6em, auto, 1.6em);
+	}
 }
-	
