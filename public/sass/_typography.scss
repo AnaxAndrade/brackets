@@ -1,25 +1,31 @@
 h1 {
 	margin: 8px 0;
-	font-size: 18px;
-	font-weight: bold;
+	font: normal 1.8em/1.4 Avenir-Bold;
+	text-transform: uppercase;
 	color: #154367;
 }
 h2 {
 	margin: 6px 0;
-	font-size: 16px;
-	font-weight: bold;
-	color: #0a1f2f;
+	font: 1.6em/1.4 Avenir-Heavy;
+	text-transform: uppercase;
+	letter-spacing: .1em;
+	color: #3d3d3d;
 }
 h3 {
 	margin: 6px 0;
-	font-size: 15px;
-	font-weight: bold;
+	font: normal 1.4em/1.4 Avenir;
+	text-transform: uppercase;
+	color: #515151;
+}
+h4 {
+	margin: 6px 0;
+	font: 300 1.4em Avenir-Medium;
+	text-transform: uppercase;
 	color: #515151;
 }
 p {
 	margin: 7px 0;
-	font-size: 13px;
-	line-height: 1.2;
+	font: normal 1.3em/1.2 Verdana, Helvetica, Arial, sans-serif;
 	color: #515151;
 }
 a {
@@ -48,9 +54,11 @@ hr {
 	padding: 0;
 	height: 1px;
 	border: none;
-	background-color: #7f7f7f;
+	background-color: #bcbcbc;
 	@include clearfix();
-
+	&.light {
+		background-color: #e8e8e8;
+	}
 	&.sm {
 		margin: 6px 0;
 	}

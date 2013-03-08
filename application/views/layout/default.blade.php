@@ -11,14 +11,14 @@
 
     <title>BRACKET</title>  
     
-	<link href="<?=URL::to_asset('assets/style/css/style.css')?>" media="screen" rel="stylesheet" type="text/css" />
+	<link href="<?=URL::to_asset('css/style.css')?>" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <?php if( ! isset($hideMenuBar)): ?>
     <header>
         <div class="wrapper">
-        @yield('headerBtn')
-        <h1>BRACKET</h1>
+            @yield('headerBtn')
+            <h4>BRACKET</h4>
         </div>
     </header>
     <?php endif; ?>
@@ -35,4 +35,10 @@
        @yield('content')
     </div>
 </body>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="<?=URL::to_asset('js/libs/swipe.js')?>"></script>
+<script type="text/javascript" src="<?=URL::to_asset('js/libs/jquery.touchclick.js')?>"></script>
+<script type="text/javascript" src="<?=URL::to_asset('js/app/bracket.js')?>"></script>
+<script type="text/javascript" src="<?=URL::to_asset('js/app/alerts.js')?>"></script>
 </html>

@@ -13,6 +13,12 @@ class Bracket_Controller extends Base_Controller
 		return View::make('bracket/bracket_v', array('tournament'=>$tournament));
 	}
 
+	public function get_reset()
+	{
+		Session::flush(); 							// reset the session.
+		return Redirect::home();
+	}
+
 	/*  Create a new bracket */
 	public function post_create()
 	{
@@ -71,9 +77,9 @@ class Bracket_Controller extends Base_Controller
 			// associate this new person with the bracket
 			$bracket->players()->attach($player);
 
-			return Redirect::to($successUri);
+			return json_encode($player);
 		}else{
-			return Redirect::to($failUri);
+			return json_endcode(array());
 		}		
 	}
 
@@ -155,7 +161,7 @@ class Bracket_Controller extends Base_Controller
 	public function get_tournament()
 	{
 		$bracket = Bracket::find(Session::get('bracketId'));
-
+		
 		// If the bracket doesn't exist
 		// redirect back on home
 		if( ! $bracket){ return Redirect::home(); }

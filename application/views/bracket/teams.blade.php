@@ -1,13 +1,13 @@
 @layout('layout/default')
 
 @section('headerBtn')
-	<?=HTML::link('bracket/add_players', '&laquo; Add Players', array('class' => 'btn sm floatleft'))?>
-	<?=HTML::link('bracket/generate_tournament', 'Build Bracket &raquo;', array('class' => 'btn sm success floatright'))?>
+	<?=HTML::link('bracket/add_players', 'Players', array('class' => 'btn sm floatleft'))?>
+	<?=HTML::link('bracket/generate_tournament', 'Build Bracket', array('class' => 'btn sm success floatright'))?>
 @endsection
 
 @section('content')
 
-<h2>Bracket Teams</h2>
+<h2 class="center">Bracket Teams</h2>
 <hr />
 <div id="bracket">
 	<?php if($teams = $bracket->teams): ?>
@@ -15,9 +15,6 @@
 		<?php foreach($teams as $k => $t): ?>
 			<li>
 				<h3><?=sprintf('%s. %s', $k+1, $t->playerNames())?></h3>
-				<div class="options">
-					<a href="" class="listRemove">Remove</a>
-				</div>
 			</li>
 		<?php endforeach; ?>
 		</ul>

@@ -1,0 +1,58 @@
+.alert {
+	position: relative;
+	margin: 10px 0 15px;
+	padding: 15px;
+	@include clearfix();
+	@include border-radius(5px);
+	@include box-emboss();
+	
+	&.error {
+		$color: $colorError;
+		@include gradient(lighten($color, 43%), lighten($color, 45%));
+		h4, p { color: darken($color, 30%); }
+	}
+	&.success {
+		$color: $colorSuccess;
+		@include gradient(lighten($color, 42%), lighten($color, 45%));
+		h4, p { color: darken($color, 30%); }
+	}
+	&.info {
+		$color : $colorInfo;
+		@include gradient(lighten($color, 42%), lighten($color, 45%));
+		h4, p { color: darken($color, 30%); }
+	}
+	&.notice {
+		$color : $colorNotice;
+		@include gradient(lighten($color, 15%), lighten($color, 13%));
+		h4, p { color: darken($color, 30%); }
+	}
+
+	button.close {
+		position: absolute;
+		display: block;
+		top: 10px;
+		right: 10px;
+		width: 24px;
+		height: 24px;
+		background: transparent url('/public/img/close-med.png') center center no-repeat;
+		opacity: .5;
+		@include hideText();
+		&:hover {
+			opacity: 1;
+		}
+	}
+	h4 {
+		float: left;
+		margin: 0 16px 0 0;
+		font-size: 1.4em;
+		line-height: 1em;
+		text-transform: uppercase;
+	}
+	p {
+		margin: 0;
+		line-height: 1;
+	}
+	a {
+		color: darken($colorPrimary, 10%);
+	}
+}

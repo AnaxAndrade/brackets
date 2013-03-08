@@ -10,12 +10,13 @@ form {
 	input {
 		margin: 0;
 		padding: .8em;
-		font-size: 12px;
+		font-size: 1.2em;
 		border: 1px solid #c6c6c6;
 		width: 100%;
 		-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	    box-sizing: border-box; 
+	    color: #787878;
 
 		@include border-radius(3px);
 
@@ -37,11 +38,11 @@ form {
 			padding: .6em;
 		}
 		&.med {
-			padding: 1em;
-			font-size: 14px;
+			padding: .9em;
+			font-size: 1.4em;
 		}
 		&.lg {
-			padding: 1.6em 1em;
+			padding: 1.4em 1em;
 			font-size: 1.8em;
 		}
 	}
@@ -55,6 +56,8 @@ form {
 	}
 	select {
 		margin: 7px 0;
-		padding: 7px;
+		padding: 4em;
+		font-size: 1.8em;
+		width: 100%;
 	}
 }

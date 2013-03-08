@@ -90,8 +90,14 @@ class Tournament extends MyModel {
 			All we need is the first round, every round after that is half the amount of matches as the previous. (for single elim)
 		*/
 		$matchesThisRound = $this->firstRoundMatches();
-		$teams = $this->bracket->teams;
 		
+		$teams = $this->bracket->teams;
+
+		// We're building a new bracket.
+		// Let's delete the existing rounds and matches.
+		// This will also remove matches and relationship through foreign key cascades.
+		$this->bracket->rounds()->delete();
+
 		// assign matches for all rounds.	
 		for($r=1;$r<=$this->getRoundCount();$r++)
 		{	
