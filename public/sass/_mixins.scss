@@ -29,6 +29,10 @@
 	-ms-transform: rotate($degree + deg);
 	transform: rotate($degree + deg);
 }
+@mixin translate3d($x, $y, $z) {
+	transform: translate3d($x, $y, $z);
+	-webkit-transform: translate3d($x, $y, $z);			
+}
 @mixin clearfix()
 {
 	zoom: 1;

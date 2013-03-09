@@ -98,21 +98,26 @@ header {
 
 #leftPanelWrapper {
 	position: fixed;
-	left: -60%;
+	left: -25em;
 	top: 0;
-	width: 63%;
+	width: 26em;
 	height: 100%;
 	background-color: #2b2b2b;
 	z-index: 15;
 	border-right: 1px solid #232323;
-	opacity: .7;
+	opacity: .9;
+	-webkit-transition-duration: .2s;
+
 	@include box-size();
 	@include box-shadow(1px, 0, 7px, 0, #8d8d8d);
-
+	&.open {
+		@include translate3d(25em, 0, 0);
+	}
 
 	#leftPanel {
+		display: block;
 		position: relative;
-		padding: 15px;
+		padding: 25px;
 	}
 
 	h2 {

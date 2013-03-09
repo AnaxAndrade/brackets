@@ -36,10 +36,8 @@ $(document).ready(function(){
     	var el = $(this);
     	if(el.parent().parent().hasClass('open'))
     	{
-    		el.addClass('closed').html('&raquo;');
     		toggleSideMenu('close');
     	}else{
-    		el.removeClass('closed').html('x');
     		toggleSideMenu('open');
     	}
     });
@@ -48,28 +46,21 @@ $(document).ready(function(){
 function toggleSideMenu(type)
 {
 	var el = $('#leftPanelWrapper');
+	var btn = $('.close', el);
 	var type = (type === undefined) ? 'open' : type;
-	var stage = $('#stage');
-   	var w;
-   	var defaultWidth = '-60%';
 
     switch(type)
     {
     	case 'close':
-    		stage.css('opacity', 1);
-	    	w = defaultWidth;
     		el.removeClass('open');
+    		btn.addClass('closed').html('&raquo;');
 	    	break;
     	case 'open':
 	    default:
-    		w = 0;
-    		stage.css('opacity', .3);
     		el.addClass('open');
-
+    		btn.removeClass('closed').html('x');
     		break;
     }
-
- 	el.animate({left: w}, 300);
 }
 
 function createBracketPlayer(ev)
