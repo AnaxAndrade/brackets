@@ -107,11 +107,15 @@ header {
 	border-right: 1px solid #232323;
 	opacity: .9;
 	-webkit-transition-duration: .2s;
+	
+	@include translate3d(0, 0, 0);
 
 	@include box-size();
 	@include box-shadow(1px, 0, 7px, 0, #8d8d8d);
 	&.open {
 		@include translate3d(25em, 0, 0);
+		-webkit-perspective: 1000;
+		-webkit-backface-visibility: hidden;
 	}
 
 	#leftPanel {
