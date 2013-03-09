@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	var a = $('.alert');
 
-	$(a).on('click', '.close', function(ev){
+	$(a).on('touchclick', '.close', function(ev){
 		hideAlert($(this).parent());
 	});
 });

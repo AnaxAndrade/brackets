@@ -1,7 +1,6 @@
 @layout('layout/default')
 
 @section('headerBtn')
-	<?=HTML::link('bracket/teams', 'Teams', array('class' => 'btn sm floatleft'))?>
 @endsection
 
 @section('content')

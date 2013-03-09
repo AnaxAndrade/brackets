@@ -35,14 +35,14 @@ class Bracket_Controller extends Base_Controller
 			Session::flush(); 							// reset the session.
 			Session::put('bracketId', $bracket->id);	// Store the bracket ID in the session.
 
-			return Redirect::to('bracket/add_players');
+			return Redirect::to('bracket/players');
 		}else{
 			return Redirect::to('/');
 		}
 	}
 
 	/* Add players to the bracket. */
-	public function get_add_players()
+	public function get_players()
 	{
 		$bracket = Bracket::find(Session::get('bracketId'));
 		if(is_null($bracket)) return Redirect::to('/');
@@ -53,7 +53,7 @@ class Bracket_Controller extends Base_Controller
 	/* Create a new player via POST and associate it with the current bracket. */
 	public function post_create_player()
 	{
-		$failUri = 'bracket/add_players';
+		$failUri = 'bracket/players';
 		$successUri = $failUri;
 
 		// Bracket to add to.
@@ -99,7 +99,7 @@ class Bracket_Controller extends Base_Controller
 		// redirect to add players
 		if(! $bracket->players)
 		{
-			return Redirect::to('bracket/add_players')->with('error','You do not have enough players to make a bracket.');;
+			return Redirect::to('bracket/players')->with('error','You do not have enough players to make a bracket.');;
 		}
 
 		// Create the tournament object from the bracket.
@@ -110,7 +110,7 @@ class Bracket_Controller extends Base_Controller
 		{
 			return Redirect::to('bracket/teams');
 		}else{
-			return Redirect::to('bracket/add_players')->with('error','You do not have enough players to make a bracket.');
+			return Redirect::to('bracket/players')->with('error','You do not have enough players to make a bracket.');
 		}
 	}
 
@@ -139,13 +139,13 @@ class Bracket_Controller extends Base_Controller
 		// if there are no players 
 		// redirect to add players
 		if(! $bracket->players){
-			return Redirect::to('bracket/add_players')->with('error','You do not have enough players to make a bracket.');;
+			return Redirect::to('bracket/players')->with('error','You do not have enough players to make a bracket.');;
 		}
 		
 		// if there are no players 
 		// redirect to add players
 		if(! $bracket->teams){
-			return Redirect::to('bracket/add_players')->with('error','Pick teams to generate a new tournament bracket.');;
+			return Redirect::to('bracket/players')->with('error','Pick teams to generate a new tournament bracket.');;
 		}
 
 		// create the tournament object

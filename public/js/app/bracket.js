@@ -9,7 +9,7 @@ $(document).ready(function(){
 	$('#createBracketPlayerForm').on('submit', createBracketPlayer);
 
 	// list actions
-	$('.listRemove').on('click', function(ev){
+	$('.listRemove').on('touchclick', function(ev){
 		var el = $(this);
 		var parent = el.parent();
 
@@ -21,10 +21,56 @@ $(document).ready(function(){
 			}
 		}
 
+		// get rid of the LI
 		parent.remove();
-
 	});
+
+	var leftPanel = document.getElementById('leftPanelWrapper');
+    Hammer(leftPanel).on("swipeleft", function(event) {
+    	toggleSideMenu('close');
+    });
+    Hammer(leftPanel).on("swiperight", function(event) {
+    	toggleSideMenu('open');
+    });
+    $('#leftPanelWrapper .togglePanel').on('touchclick', function(){
+    	var el = $(this);
+    	if(el.parent().parent().hasClass('open'))
+    	{
+    		el.addClass('closed').html('&raquo;');
+    		toggleSideMenu('close');
+    	}else{
+    		el.removeClass('closed').html('x');
+    		toggleSideMenu('open');
+    	}
+    });
 });
+
+function toggleSideMenu(type)
+{
+	var el = $('#leftPanelWrapper');
+	var type = (type === undefined) ? 'open' : type;
+	var stage = $('#stage');
+   	var w;
+   	var defaultWidth = '-60%';
+
+    switch(type)
+    {
+    	case 'close':
+    		stage.css('opacity', 1);
+	    	w = defaultWidth;
+    		el.removeClass('open');
+	    	break;
+    	case 'open':
+	    default:
+    		w = 0;
+    		stage.css('opacity', .3);
+    		el.addClass('open');
+
+    		break;
+    }
+
+ 	el.animate({left: w}, 300);
+}
 
 function createBracketPlayer(ev)
 {

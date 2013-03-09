@@ -40,6 +40,10 @@
 		&:hover {
 			opacity: 1;
 		}
+		@include respond-to(mobile) {
+			top: 7px;
+			right: 7px;
+		}
 	}
 	h4 {
 		float: left;
@@ -47,6 +51,11 @@
 		font-size: 1.4em;
 		line-height: 1em;
 		text-transform: uppercase;
+		@include respond-to(mobile) {
+			float: none;
+			margin-bottom: 5px;
+			display: block;
+		}
 	}
 	p {
 		margin: 0;

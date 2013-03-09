@@ -11,14 +11,13 @@ form {
 		margin: 0;
 		padding: .8em;
 		font-size: 1.2em;
-		border: 1px solid #c6c6c6;
+		border: 1px solid #DBDDDC;
 		width: 100%;
-		-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-	    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-	    box-sizing: border-box; 
 	    color: #787878;
-
-		@include border-radius(3px);
+	    background-color: #ffffff;
+		@include border-radius(5px);
+		@include box-size();
+		@include box-shadow(0, 0, 0, 0, #ffffff, inset);
 
 		&[type=email] {
 			
@@ -42,8 +41,9 @@ form {
 			font-size: 1.4em;
 		}
 		&.lg {
-			padding: 1.4em 1em;
-			font-size: 1.8em;
+			padding: 1.1em 1em;
+			font-size: 1.7em;
+			@include border-radius(30px);
 		}
 	}
 	textarea {

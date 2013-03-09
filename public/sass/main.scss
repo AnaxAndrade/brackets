@@ -41,10 +41,16 @@ li {
 	color: #b2b2b2;
 }
 
+html {	height: 100%; }
 body {
 	background-color: $colorBackground;
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	font-size: 10px; // 1em;
+	height: 100%;
+	-webkit-tap-highlight-color: white(0);
+	@include respond-to(mobile) {
+		background-color: #E9EBEA;
+	}
 }
 
 header {
@@ -85,14 +91,81 @@ header {
 	a {
 		// @include btnStructure(.7em 1em, auto, 1.2em);
 		// @include btnColors(#a8c5e1, #ffffff);
-		margin: 3px 0 0 !important;
+		margin: 1px 0 0 !important;
+		padding: .5em;
 	}
 }
 
+#leftPanelWrapper {
+	position: fixed;
+	left: -60%;
+	top: 0;
+	width: 63%;
+	height: 100%;
+	background-color: #2b2b2b;
+	z-index: 15;
+	border-right: 1px solid #232323;
+	opacity: .7;
+	@include box-size();
+	@include box-shadow(1px, 0, 7px, 0, #8d8d8d);
+
+
+	#leftPanel {
+		position: relative;
+		padding: 15px;
+	}
+
+	h2 {
+		color: #FAFCFB;
+	}
+	p {
+		color: #FAFCFB;
+	}	
+	button.togglePanel {
+		position: absolute;
+		right: -27px;
+		top: 9px;
+		margin: 0; 
+		padding: 5px 8px 5px 30px;
+		font-size: 1.6em;
+		text-transform: uppercase;
+		font-weight: bold;
+		line-height: 1;
+		color: #fff;
+		text-align: center;
+		background-color: #2b2b2b;
+
+		@include border-radius(7px);
+		&.closed {
+			font-size: 2.4em;
+			padding-top: 0;
+			padding-left: 39px;
+		}
+	}
+
+	ul {
+		li {
+			margin: 6px 0;
+			padding: 6px;
+			font-size: 1.8em;
+			line-height: 1.4;
+			color: #FAFCFB;
+			border-bottom: 1px solid #787878;
+			&:last-child {
+				border: none;
+			}
+		}
+		a {
+			color: #FAFCFB;
+		}
+	}
+}
 #stage {
 	position: relative;
-	padding: 60px 20px 20px;
+	padding: 10px 15px 20px;
 	width: auto;
+	@include box-size();
+
 	@include respond-to(desktop) {
 		margin: 0 auto;
 		width: $mediaTabletLandscape;
@@ -102,7 +175,10 @@ header {
 		width: $mediaTabletPortrait;
 	}
 	@include respond-to(mobile) {
-
+		margin: 0 5px;
+		height: 100%;
+		background-color: #ffffff;
+		@include box-shadow(0, 0, 4px, 0, #b9b9b9);
 	}
 	@include clearfix();
 }
@@ -240,7 +316,7 @@ header {
 	} 
 }
 
-#playerList {
+ol {
 	list-style: decimal;
 	li {
 		font-size: 1.4em;

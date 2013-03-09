@@ -9,7 +9,7 @@ button {
 
 	@include box-size();
 	@include btnColors($colorPrimary, $colorLight); // -- base button color, font color
-	@include btnStructure(1.1em, auto, 1.2em, 3px); // -- padding, width, font-size, border-radius
+	@include btnStructure(1.1em, auto, 1.2em, 4px); // -- padding, width, font-size, border-radius
 
 	&.notice {
 		@include btnColors($colorNotice);
@@ -34,6 +34,6 @@ button {
 		@include btnStructure(.6em .6em .5em, auto, 1.3em, 2px);
 	}
 	&.lg {
-		@include btnStructure(1.4em 1.6em, auto, 1.6em);
+		@include btnStructure(1.4em 1.6em, auto, 1.6em, 5px);
 	}
 }
