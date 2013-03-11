@@ -1,10 +1,5 @@
 @layout('layout/default')
 
-@section('headerBtn')
-	<?=HTML::link('bracket/players', 'Players', array('class' => 'btn sm floatleft'))?>
-	<?=HTML::link('bracket/generate_tournament', 'Build Bracket', array('class' => 'btn sm success floatright'))?>
-@endsection
-
 @section('content')
 
 <h2 class="center">Bracket Teams</h2>
@@ -22,5 +17,12 @@
 		<p>There are no teams. <?=HTML::link('bracket/players', 'Add players and pick teams')?></p>
 	<?php endif; ?>
 </div>
+<hr />
+@section('headerBtn')
+	<?=HTML::link('bracket/players', 'Players', array('class' => 'btn med floatleft'))?>
+	<?php if($teams = $bracket->teams): ?>
+		<?=HTML::link('bracket/generate_tournament', 'Build Bracket', array('class' => 'btn med success floatright'))?>
+	<?php endif; ?>
+@endsection
 
 @endsection

@@ -16,7 +16,7 @@
 // some default stuff
 .floatleft { float: left; }
 .floatright { float: right; }
-.clearfix { @include clearfix(); }
+.clear { @include clearfix(); }
 .center { text-align: center; }
 li {
 	position: relative;
@@ -250,28 +250,17 @@ header {
 		.match {
 			position: relative;
 			margin: 15px 0 25px;
+			@include clearfix();
 			@include box-shadow(0,1px,3px,0,#d4d4d4);
+
 			&.complete {
-			//	opacity: .3;
+				//	opacity: .3;
 			}
-			&:hover {
-				opacity: 1;
-			}
-			.vs {
-				position: absolute;
-				display: block;
-				left: 15px;
-				top: 39px;
-				padding: 3px;
-				z-index: 10;
-				font-size: 1.4em;
-				text-transform: uppercase;
-				letter-spacing: .1em;
-				font-weight: bold;
-				color: black(.1);
+			&.ready {
+
 			}
 			.emptyMatch {
-				padding: 33px 10px 34px;
+				padding: 35px 10px 34px;
 				text-align: center;
 				text-transform: uppercase;
 				letter-spacing: .7em;
@@ -280,14 +269,15 @@ header {
 			}
 			.side {
 				position: relative;
-				padding: 10px 7px 10px 58px;
-				background-color: #ffffff;
+				padding: 10px 7px 10px 15px; 
 				cursor: pointer;
+				border-left: 3px solid $colorSuccess;
 				-webkit-tap-highlight-color: white(0);
+				background-color: white();
+				&:first-child {
+					border-bottom: 2px solid #c6c6c6;
+				}
 				h3 { 
-					position: absolute;
-					top: 13px;
-					left: 10px;
 					font-size: 10px;
 					font-weight: normal;
 					text-transform: uppercase;
@@ -297,34 +287,39 @@ header {
 				p {
 					line-height: 1em;
 					font-size: 1.4em;
+					text-transform: uppercase;
+					color: #8b8b8b;
 				}
 				.winnerBtn {
 					position: absolute;
 					left: 5%;
 					top: 20%;
 					width: 90%;
-					@include box-shadow(0, 0, 10px, 1px, $colorPrimary);
+					@include box-shadow(0, 0, 1px, 1px, $colorPrimary);
 				}
 
 				&.unassigned {
-					opacity: .4;
+					@include gradient(#fafafa, #fafafa, left);
+					opacity: .3;
 				}
 				&.away {
-					border-top: 1px solid #ededed;
+
 				}
 				&.home {
 
 				}
 				&.winner {
-					background-color: #b8ffc2;
+					border-left: 10px solid darken($colorNotice, 30%);
+					@include gradient(#ffffff, #ffffff, left);
 				}
 				&.loser {
-					background-color: #fcf8fb;
+					opacity: .2;
+					border-left: 10px solid black(.8);
 					h3 {
-						color: #d7d3d6;
+						color: #333333;
 					}
 					p {
-						color: #d7d3d6;
+						color: #333333;
 					}
 				}
 			}
@@ -339,6 +334,19 @@ header {
 	} 
 }
 
+#createBracketPlayerForm {
+	@include respond-to(desktop) {
+		float: right;
+		width: 46%;
+	}
+}
+#playerList {
+	@include respond-to(desktop) {
+		float: left;
+		width: 46%;
+	}
+}
+
 ol {
 	list-style: decimal;
 	li {
@@ -351,7 +359,6 @@ ol {
 		font-size: 1em;
 	}
 }
-
 
 #createBracketPlayerForm {
 	@include clearfix();

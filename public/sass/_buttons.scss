@@ -46,7 +46,6 @@ button {
 	border: 1px solid black(.2);
 	background-color: #fefefe;
 	@include border-radius(3px);
-	// @include gradient(#fefefe, #e5e5e5);
 	@include box-size();
 }
 #btnNav {
@@ -56,7 +55,7 @@ button {
 		width: 100%;
 		margin: 3px 0;
 		height: 3px;
-		background-color: black(.2);
+		background-color: black(.1);
 
 		@include box-emboss();
 	}

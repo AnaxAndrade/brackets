@@ -61,14 +61,14 @@
 }
 
 // color stuff
-@mixin gradient($from, $to)
+@mixin gradient($from, $to, $direction: top)
 {
    background-color: $from; 
-   // background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from($from), to($to));
-   background-image: -webkit-linear-gradient(top, $from, $to); 
-   background-image: -moz-linear-gradient(top, $from, $to);
-   background-image: -ms-linear-gradient(top, $from, $to);
-   background-image: -o-linear-gradient(top, $from, $to);
+   background-image: -webkit-gradient(linear, $direction 0%, $direction 100%, from($from), to($to));
+   background-image: -webkit-linear-gradient($direction, $from, $to); 
+   background-image: -moz-linear-gradient($direction, $from, $to);
+   background-image: -ms-linear-gradient($direction, $from, $to);
+   background-image: -o-linear-gradient($direction, $from, $to);
 }
 
 // movement stuff

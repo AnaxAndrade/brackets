@@ -70,7 +70,7 @@ function createBracketPlayer(ev)
 
 	request.done(function(data) {
 		var player = data.attributes;
-		var list = $('#playerList');
+		var list = $('#playerList ol');
 
 		var newElem = $('<li>');
 		newElem.append('<button class="listOpt listRemove">Remove</button>');
