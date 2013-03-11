@@ -1,5 +1,6 @@
 
 $(document).ready(function(){
+	$('body').removeClass('preload');
 	if(isMobile()) initMobile();
 
 	// new player form

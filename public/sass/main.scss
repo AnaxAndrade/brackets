@@ -34,8 +34,12 @@ li {
 		@include hideText();
 	}
 }
-
-
+.preload * {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+}
 .emptyListMsg {
 	padding: 8px 0;
 	color: #b2b2b2;
@@ -172,7 +176,6 @@ header {
 	-webkit-transition-duration: .2s;
 	-webkit-perspective: 1000;
 	-webkit-backface-visibility: hidden;
-	@include translate3d(0, 0, 0);
 	@include box-size();
 	@include clearfix();
 
@@ -208,6 +211,14 @@ header {
 
 #mainTitle {
 	padding: 80px 0 20px;
+	h1 {
+		margin: 0 0 20px;
+		text-align: center;
+		font: normal 4em/1.2 Avenir-Light;
+		color: black(.8);
+		letter-spacing: .3em;
+		text-shadow: 2px 2px 0  black(.2);
+	}	
 	p {
 		margin: 10px auto;
 		width: 80%;

@@ -17,7 +17,7 @@
     
 	<link href="<?=URL::to_asset('css/style.css')?>" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body>
+<body class="preload">
      <div id="leftPanelWrapper" class="panel">
         <div class="innerPanel">
             <ul>   

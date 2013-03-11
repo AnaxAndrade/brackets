@@ -8,7 +8,7 @@
 	<div class="alert notice">
 		<button class="close">Close</button>
 		<h4>Guess What</h4>
-		<p>You already have a bracket running.  <?=HTML::link('bracket/teams', 'Go to your bracket!')?></p>
+		<p>You already have a bracket running.  <?=HTML::link('bracket/tournament', 'Go to your bracket!')?></p>
 	</div>
 	<?php endif; ?>
 <?=Form::open('bracket/create', 'POST', array('id'=>'createBracketForm'))?>
