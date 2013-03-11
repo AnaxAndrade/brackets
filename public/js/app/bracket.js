@@ -2,9 +2,6 @@
 $(document).ready(function(){
 	if(isMobile()) initMobile();
 
-	// show winner btn when clicking a side.
-	$('#bracket').on('touchclick', '.side.active', toggleSliderWinnerBtn);
-
 	// new player form
 	$('#createBracketPlayerForm').on('submit', createBracketPlayer);
 
@@ -23,6 +20,18 @@ $(document).ready(function(){
 
 		// get rid of the LI
 		parent.remove();
+	});
+
+	// Match Flip
+	$('.match.ready .front, .match.complete .front').on('touchclick', function(){
+		$('.flipped').removeClass('flipped');
+		$(this).parent().addClass('flipped');
+
+		return false;
+	});
+	$('.match .back .close').on('touchclick', function(e){
+		$('.flipped').removeClass('flipped');
+		e.stopPropagation();
 	});
 
 	// Panels

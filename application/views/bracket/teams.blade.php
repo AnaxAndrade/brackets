@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h2 class="center">Bracket Teams</h2>
+<h3 class="center">Bracket Teams</h3>
 <hr />
 <div id="bracket">
 	<?php if($teams = $bracket->teams): ?>
@@ -19,10 +19,14 @@
 </div>
 <hr />
 @section('headerBtn')
-	<?=HTML::link('bracket/players', 'Players', array('class' => 'btn med floatleft'))?>
 	<?php if($teams = $bracket->teams): ?>
-		<?=HTML::link('bracket/generate_tournament', 'Build Bracket', array('class' => 'btn med success floatright'))?>
+		<?=HTML::link('bracket/generate_tournament', 'Build Bracket', array('class' => 'btn med success'))?>
+		<hr />
 	<?php endif; ?>
+	<div class="clear">
+		<?=HTML::link('bracket/pick_teams', 'Repick Teams', array('class' => 'btn med floatright'))?>
+		<?=HTML::link('bracket/players', 'Players', array('class' => 'btn med notice floatleft'))?>
+	</div>
 @endsection
 
 @endsection

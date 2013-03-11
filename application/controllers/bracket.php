@@ -173,19 +173,28 @@ class Bracket_Controller extends Base_Controller
 	}
 
 	// Set match winner
-	public function get_set_match_winner($matchId, $teamId)
+	public function post_set_match_winner($matchId)
 	{
 		$bracket = Bracket::find(Session::get('bracketId'));
 		$match = Match::find($matchId);
-		$team = Team::find($teamId);
 
 		// If the bracket doesn't exist
 		// redirect back on home
 		if( ! $bracket){ return Redirect::home(); }
-		if( ! $match or ! $team){ return Redirect::to('bracket/tournament'); }
+		if( ! $match){ return Redirect::to('bracket/tournament'); }
+
+		$homeScore = Input::get('teamScoreHome');
+		$awayScore = Input::get('teamScoreAway');
+
+		if($homeScore < 5 && $awayScore < 5)
+		{
+			return Redirect::to('bracket/tournament')->with('error', 'Neither team has a high enough score to conclude the match.');
+		}
 
 		// Create the tournament object
 		$tournament = new Tournament($bracket);
+
+		$team = ($homeScore > $awayScore ? $match->teams[0] : $match->teams[1]);
 
 		// advance this team to the next round or declare them the champ.
 		$tournament->advanceTeam($match, $team);
