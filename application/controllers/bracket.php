@@ -3,23 +3,19 @@ class Bracket_Controller extends Base_Controller
 {
 	public $restful = true;
 
+	// this is the main bracket/tournament view.
 	public function get_index()
 	{
-		// $testUsers = array(  'Fez', 'Stephen Hyde', 'Eric Forman', 'Laura Pinciotti', 'Redd Forman', 'Jackie Berkhart', 'Kitty Forman', 'Bob Pinciotti', 'Kelso', 'Leo', 'Nina', 'Laurie', 'Midge Pinciotti', 'Jimmy Page', 'Mila Kunis'/*, 'Danny Masterson' */);
+		// get the bracket.
+		$bracket = Bracket::find(Session::get('bracketId'));
 
-		$bracket = Bracket::find(1);
+		// get the tournament object.
 		$tournament = New Tournament($bracket);
 
-		return View::make('bracket/bracket_v', array('tournament'=>$tournament));
+		return View::make('bracket/bracket_v', array('tournament'=>$tournament,'bracket'=>$bracket));
 	}
 
-	public function get_reset()
-	{
-		Session::flush(); 							// reset the session.
-		return Redirect::home();
-	}
-
-	/*  Create a new bracket */
+	// Create a new bracket 
 	public function post_create()
 	{
 		$bracket = new Bracket;
@@ -41,16 +37,16 @@ class Bracket_Controller extends Base_Controller
 		}
 	}
 
-	/* Add players to the bracket. */
+	// Add players to the bracket.
 	public function get_players()
 	{
 		$bracket = Bracket::find(Session::get('bracketId'));
-		if(is_null($bracket)) return Redirect::to('/');
+		if( ! $bracket){ return Redirect::home(); }
 
 		return View::make('bracket/add_players', array('bracket'=>$bracket));
 	}
 
-	/* Create a new player via POST and associate it with the current bracket. */
+	// Create a new player via POST and associate it with the current bracket.
 	public function post_create_player()
 	{
 		$failUri = 'bracket/players';
@@ -83,7 +79,7 @@ class Bracket_Controller extends Base_Controller
 		}		
 	}
 
-	/* Pick players for the bracket */
+	// Pick players for the bracket
 	public function get_pick_teams()
 	{
 		$bracket = Bracket::find(Session::get('bracketId'));
@@ -99,7 +95,7 @@ class Bracket_Controller extends Base_Controller
 		// redirect to add players
 		if(! $bracket->players)
 		{
-			return Redirect::to('bracket/players')->with('error','You do not have enough players to make a bracket.');;
+			return Redirect::to('bracket/players')->with('error','You do not have enough players to make a bracket.');
 		}
 
 		// Create the tournament object from the bracket.
@@ -114,7 +110,7 @@ class Bracket_Controller extends Base_Controller
 		}
 	}
 
-	/* Show the teams in the bracket */
+	// Show the teams in the bracket 
 	public function get_teams()
 	{
 		$bracket = Bracket::find(Session::get('bracketId'));
@@ -127,7 +123,7 @@ class Bracket_Controller extends Base_Controller
 		return View::make('bracket/teams', array('bracket'=>$bracket));
 	}
 
-	/* Generate the tournament bracket for a bracket with teams in place */
+	// Generate the tournament bracket for a bracket with teams in place 
 	public function get_generate_tournament()
 	{
 		$bracket = Bracket::find(Session::get('bracketId'));
@@ -166,6 +162,11 @@ class Bracket_Controller extends Base_Controller
 		// redirect back on home
 		if( ! $bracket){ return Redirect::home(); }
 
+		// If the bracket does not have any rounds then 
+		// let's send them to the players screen.
+		if( ! $bracket->current_round){ return Redirect::to('bracket/players')->with('error','Add players first then pick teams.'); }
+
+		// generate the tournament object from the current bracket object.
 		$tournament = new Tournament($bracket);
 
 		return View::make('bracket/bracket', array('bracket' => $bracket, 'tournament' => $tournament));
@@ -192,4 +193,10 @@ class Bracket_Controller extends Base_Controller
 		return Redirect::to('bracket/tournament');
 	}
 
+	// reset a bracket session.
+	public function get_reset()
+	{
+		Session::flush(); 							// reset the session.
+		return Redirect::home();
+	}
 }

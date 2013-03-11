@@ -25,42 +25,35 @@ $(document).ready(function(){
 		parent.remove();
 	});
 
-	var leftPanel = document.getElementById('leftPanelWrapper');
-    Hammer(leftPanel).on("swipeleft", function(event) {
-    	toggleSideMenu('close');
+	// Panels
+    $('#btnNav').on('touchclick', function(){
+    	togglePanel('left');
+    	return false;
     });
-    Hammer(leftPanel).on("swiperight", function(event) {
-    	toggleSideMenu('open');
+	// Panels
+    $('#btnSettings').on('touchclick', function(){
+    	togglePanel('right');
+    	return false;
     });
-    $('#leftPanelWrapper .togglePanel').on('touchclick', function(){
-    	var el = $(this);
-    	if(el.parent().parent().hasClass('open'))
-    	{
-    		toggleSideMenu('close');
-    	}else{
-    		toggleSideMenu('open');
-    	}
-    });
+
+	$('#leftPanelWrapper').hammer().on('swipeleft', function(e) {
+    	togglePanel('left');
+	});
+	$('#rightPanelWrapper').hammer().on('swiperight', function(e) {
+    	togglePanel('right');
+	});
 });
 
-function toggleSideMenu(type)
+function togglePanel(position)
 {
-	var el = $('#leftPanelWrapper');
-	var btn = $('.close', el);
-	var type = (type === undefined) ? 'open' : type;
+	var el = $('#' + position + 'PanelWrapper');
+	var stage = $('#stage');
+	var stageOpenClass = 'shift' + position;
 
-    switch(type)
-    {
-    	case 'close':
-    		el.removeClass('open');
-    		btn.addClass('closed').html('&raquo;');
-	    	break;
-    	case 'open':
-	    default:
-    		el.addClass('open');
-    		btn.removeClass('closed').html('x');
-    		break;
-    }
+	var btn = $('#btnNav');
+
+	el.toggleClass('open');
+	stage.toggleClass(stageOpenClass);
 }
 
 function createBracketPlayer(ev)

@@ -18,20 +18,32 @@
 	<link href="<?=URL::to_asset('css/style.css')?>" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body>
-     <div id="leftPanelWrapper">
-        <div id="leftPanel">
-            <button class="togglePanel closed">&raquo;</button>
+     <div id="leftPanelWrapper" class="panel">
+        <div class="innerPanel">
             <ul>   
                 <li><a href="<?=URL::to('bracket/tournament')?>">My Bracket</a></li>
-                <li><a href="<?=URL::to('bracket/players')?>">Players</a></li>
-                <li><a href="<?=URL::to('bracket/teams')?>">Teams</a></li>
+                <li><a href="<?=URL::to('bracket/players')?>">Players <span class="playerCount">(<?=(isset($bracket->players) ? count($bracket->players) : '0')?>)</span></a></li>
+                <li><a href="<?=URL::to('bracket/teams')?>">Teams <span class="teamCount">(<?=(isset($bracket->teams) ? count($bracket->teams) : '0')?>)</span></a></li>
+            </ul>
+        </div>
+    </div>
+     <div id="rightPanelWrapper" class="panel">
+        <div class="innerPanel">
+            <ul>   
+                <li><a href="<?=URL::to('bracket/tournament')?>">My Account</a></li>
+                <li><a href="<?=URL::to('bracket/players')?>">My Bracket History</a></li>
             </ul>
         </div>
     </div>
 
     <div id="stage">
+        <button id="btnNav" class="navBtn">
+            <span class="horizBar"></span>
+            <span class="horizBar"></span>
+            <span class="horizBar"></span>
+        </button>
+        <button id="btnSettings" class="navBtn"></button>
 
-        
         <?php if(Session::has('error')): ?>
             <div class="alert error">
                 <button class="close">Close</button>
@@ -41,7 +53,7 @@
         <?php endif; ?>
 
         @yield('content')
-        <hr />
+
         @yield('headerBtn')
     </div>
 </body>
@@ -50,6 +62,6 @@
 <script type="text/javascript" src="<?=URL::to_asset('js/libs/swipe.js')?>"></script>
 <script type="text/javascript" src="<?=URL::to_asset('js/libs/jquery.hammer.js')?>"></script>
 <script type="text/javascript" src="<?=URL::to_asset('js/libs/jquery.touchclick.js')?>"></script>
-<script type="text/javascript" src="<?=URL::to_asset('js/app/bracket.js')?>"></script>
 <script type="text/javascript" src="<?=URL::to_asset('js/app/alerts.js')?>"></script>
+<script type="text/javascript" src="<?=URL::to_asset('js/app/bracket.js?2')?>"></script>
 </html>

@@ -37,3 +37,35 @@ button {
 		@include btnStructure(1.4em 1.6em, auto, 1.6em, 5px);
 	}
 }
+
+.navBtn {
+	position: fixed;
+	top: 10px;
+	width: 30px;
+	padding: 7px 6px;
+	border: 1px solid black(.2);
+	background-color: #fefefe;
+	@include border-radius(3px);
+	// @include gradient(#fefefe, #e5e5e5);
+	@include box-size();
+}
+#btnNav {
+	left: 15px;
+	.horizBar {
+		display: block;
+		width: 100%;
+		margin: 3px 0;
+		height: 3px;
+		background-color: black(.2);
+
+		@include box-emboss();
+	}
+}
+#btnSettings {
+	right: 15px;
+	padding: 8px 6px;
+	background-image: url('/public/img/icon-settings-sm.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+	@include hideText();
+}
