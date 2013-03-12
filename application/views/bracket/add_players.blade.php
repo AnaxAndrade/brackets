@@ -10,7 +10,7 @@
 		<?php if($bracket->players): ?>
 			<?php foreach($bracket->players as $k => $p): ?>
 				<li>
-					<button class="listOpt listRemove confirm" data-confirm-msg="Are you sure you want to remove this player?">Remove</button>
+					<button class="listOpt listRemove confirm" data-confirm-msg="Are you sure you want to remove this player?" data-uri="bracket/delete_player" data-item-id="<?=$p->id?>">Remove</button>
 					<h3><?=sprintf('%s %s', $p->first_name, $p->last_name)?></h3>
 				</li>
 			<?php endforeach; ?>

@@ -7,9 +7,13 @@ $(document).ready(function(){
 	$('#createBracketPlayerForm').on('submit', createBracketPlayer);
 
 	// list actions
-	$('.listRemove').on('touchclick', function(ev){
+	$('ol, ul').on('touchclick', '.listRemove', function(ev){
+		console.log('werk you dirty bastage');
+
 		var el = $(this);
 		var parent = el.parent();
+		var itemId = el.data('item-id');
+		var uri = '/' + el.data('uri') + '/' + itemId;
 
 		if(el.hasClass('confirm'))
 		{
@@ -19,8 +23,27 @@ $(document).ready(function(){
 			}
 		}
 
-		// get rid of the LI
-		parent.remove();
+		var request = ajaxRequest(uri, false, 'get');
+
+		// when the request is finished, add some data to the dom or remove the player if the addition failed.
+		request.done(function(data) {
+			if(data.code == 200)
+			{
+				parent.remove();
+			}else{
+				alert(data.msg);
+			}
+		});
+
+		request.fail(function(jqXHR, textStatus) {
+			alert( "Request failed: " + textStatus );
+		});
+
+		request.always(function(){
+
+		});
+
+		return;
 	});
 
 	// Match Flip
@@ -73,23 +96,53 @@ function createBracketPlayer(ev)
 	var form = $(this);
 	var data = form.serialize();
 	var url = form.attr('action');
+	var name = $('input[name=playerName]', form).val();
+	var list = $('#playerList ol');
 
-	if( ! $('input[name=playerName]', form).val()) return;
+	if( ! name) return;
 	
+	// add player to dom immediately. 
+	var nameArr = name.split(' ');
+	var player = {
+		first_name : nameArr[0],
+		last_name : nameArr[1] ? nameArr[1] : ''
+	};
+
+	// new elem
+	var newElem = $('<li>');
+	// don't show the remove button until we've confirmed the player has been saved.
+	newElem.append('<button class="listOpt listRemove confirm" data-confirm-msg="Are you sure you want to remove this player?" data-uri="bracket/delete_player">Remove</button>'); 
+	newElem.append('<h3>' + player.first_name + ' ' + player.last_name + '</h3>');
+	var removeBtn = $('button.listRemove',newElem);
+	removeBtn.hide();
+
+	$('.emptyListMsg', list).hide();
+	$('input[type=text]', form).focus().val('');
+
+	// append to the player list
+	list.append(newElem);
+
 	var request = ajaxRequest(url, data, 'post');
 
+	// when the request is finished, add some data to the dom or remove the player if the addition failed.
 	request.done(function(data) {
-		var player = data.attributes;
-		var list = $('#playerList ol');
+		var res = data.attributes;
 
-		var newElem = $('<li>');
-		newElem.append('<button class="listOpt listRemove">Remove</button>');
-		newElem.append('<h3>' + player.first_name + ' ' + (player.last_name === false ? '' : player.last_name) + '</h3>');
-		list.append(newElem);
-		
-		$('.emptyListMsg', list).hide();
+		if(res)
+		{
+			// let's add the new player ID to the dome and show the "remove player" button
+			removeBtn.data('item-id', res.id).show();
 
-		$('input[type=text]', form).focus().val('');
+
+		}else{ 
+			// if there is no result, let's remove 
+			// the player from the list and alert the user.
+			if(list.children('li').length == 1) $('.emptyListMsg', list).show(); // show empty message if this is the last player.
+			newElem.remove();
+
+			alert('There was a system error adding ' + name);
+		}
+
 	});
 
 	request.fail(function(jqXHR, textStatus) {
@@ -106,7 +159,7 @@ function initMobile()
 {
 	window.scrollTo(0, 1);
 
-	$('a').on('click', function(){
+	$('a').on('touchclick', function(){
 		window.location=$(this).attr('href');
 		return false;
 	});

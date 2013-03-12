@@ -49,8 +49,9 @@ class Bracket_Controller extends Base_Controller
 	// Create a new player via POST and associate it with the current bracket.
 	public function post_create_player()
 	{
+		if(!Request::ajax()) return;
+
 		$failUri = 'bracket/players';
-		$successUri = $failUri;
 
 		// Bracket to add to.
 		$bracket = Bracket::find(Session::get('bracketId'));
@@ -67,6 +68,8 @@ class Bracket_Controller extends Base_Controller
 		$player->first_name = $name[0];
 		$player->last_name = isset($name[1]) ? $name[1] : false;
 
+		sleep(2);
+
 		// save the player
 		if($player->save())
 		{
@@ -75,8 +78,30 @@ class Bracket_Controller extends Base_Controller
 
 			return json_encode($player);
 		}else{
-			return json_endcode(array());
+			return json_encode(array());
 		}		
+	}
+
+	public function get_delete_player($playerId)
+	{
+		$player = Player::find($playerId);
+		$response = array();
+		if(! $player)
+		{
+			// no player exists
+			$response['code'] = 404;
+			$response['msg'] = 'This player does not exist.';
+		}elseif($player->delete()){
+			// success
+			$response['code'] = 200;
+			$response['msg'] = 'This player has been deleted.';
+		}else{
+			// fail
+			$response['code'] = 500;
+			$response['msg'] = 'This player could not be removed.';
+		}
+
+		return json_encode($response);
 	}
 
 	// Pick players for the bracket
