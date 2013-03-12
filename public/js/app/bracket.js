@@ -139,13 +139,18 @@ function createBracketPlayer(ev)
 			if(list.children('li').length == 1) $('.emptyListMsg', list).show(); // show empty message if this is the last player.
 			newElem.remove();
 
-			alert('There was a system error adding ' + name);
+			alert('There was an error adding ' + name + '.');
 		}
 
 	});
 
 	request.fail(function(jqXHR, textStatus) {
-		alert( "Request failed: " + textStatus );
+		// if there is no result, let's remove 
+		// the player from the list and alert the user.
+		if(list.children('li').length == 1) $('.emptyListMsg', list).show(); // show empty message if this is the last player.
+		newElem.remove();
+
+		alert('There was a system error adding this player.');
 	});
 
 	request.always(function(){

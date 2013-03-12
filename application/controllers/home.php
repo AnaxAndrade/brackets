@@ -9,8 +9,7 @@ class Home_Controller extends Base_Controller
 		return View::make('home/index', array('bracket'=>$bracket, 'hideMenuBar' => true));
 	}
 
-	public function action_demo()
+	public function action_make()
 	{
-		$matches = Bracket::find(1)->matches();
 	}
 }
