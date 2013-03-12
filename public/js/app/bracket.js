@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
 	$('body').removeClass('preload');
 	if(isMobile()) initMobile();
@@ -210,7 +209,7 @@ function iniSlider(id, speed, startSlide, autoStart, callback)
 // Is this user device a recognized mobile device (for the most part...)
 function isMobile()
 {
-	return navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/);
+	return navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|Mobile)/);
 }
 
 // Create a default jquery ajax request
