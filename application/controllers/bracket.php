@@ -63,8 +63,6 @@ class Bracket_Controller extends Base_Controller
 		$player->first_name = $name[0];
 		$player->last_name = isset($name[1]) ? $name[1] : false;
 
-		sleep(2);
-
 		// save the player
 		if($player->save())
 		{
