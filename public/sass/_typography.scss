@@ -25,7 +25,7 @@ h4 {
 }
 p {
 	margin: 7px 0;
-	font: normal 1.3em/1.2 Verdana, Helvetica, Arial, sans-serif;
+	font: normal 1.3em/1.4 Verdana, Helvetica, Arial, sans-serif;
 	color: #515151;
 }
 a {
@@ -36,6 +36,15 @@ a {
 	}
 }
 
+li {
+	font: normal 1.3em/1.4 Verdana, Helvetica, Arial, sans-serif;
+	color: #515151;
+}
+
+strong {
+	font-weight: bold;
+}
+
 .label {
 	display: inline;
 	padding: .1em .4em .2em .4em;
@@ -44,6 +53,9 @@ a {
 	background-color: lighten($colorPrimary, 17%);
 	@include border-radius(6px);
 }
+
+.txtAttn { color: $colorError !important; }
+.txtSucces { color: $colorSuccess !important; }
 
 /*
 	I think HR counts as typography... suck on that.

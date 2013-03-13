@@ -3,4 +3,25 @@
   .span#{$i * 5} {
     width: ($i * 5) + 0% !important;
    }
+  .mediaBreakLeft#{$i * 5} {
+  	float: left;
+    width: ($i * 5) + 0%;
+   }
+  .mediaBreakRight#{$i * 5} {
+  	float: right;
+    width: ($i * 5) + 0%;
+   }
+}
+
+.mediaBreak {
+	@include respond-to(mobile)
+	{
+		float: none;
+		width: auto;
+	}
+	@include respond-to(tablet-portrait)
+	{
+		float: none;
+		width: auto;
+	}
 }

@@ -6,13 +6,10 @@ class Bracket_Controller extends Base_Controller
 	// this is the main bracket/tournament view.
 	public function get_index()
 	{
-		// get the bracket.
+		// if there is already a bracket we'll tell em.
 		$bracket = Bracket::find(Session::get('bracketId'));
 
-		// get the tournament object.
-		$tournament = New Tournament($bracket);
-
-		return View::make('bracket/bracket_v', array('tournament'=>$tournament,'bracket'=>$bracket));
+		return View::make('bracket/create', array('bracket'=>$bracket));
 	}
 
 	// Create a new bracket 
@@ -27,8 +24,6 @@ class Bracket_Controller extends Base_Controller
 		// save the new bracket
 		if($bracket->save())
 		{
-			
-			Session::flush(); 							// reset the session.
 			Session::put('bracketId', $bracket->id);	// Store the bracket ID in the session.
 
 			return Redirect::to('bracket/players');

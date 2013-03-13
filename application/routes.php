@@ -13,8 +13,14 @@
 */
 
 Route::get('/', 'home@index');				// Use the 'Home' controller and the 'action_index' method.
-Route::controller('home');		// 
-Route::controller('bracket');	// 
+Route::controller('home');
+
+// FILTERS
+Route::group(array('before' => 'auth'), function()
+{
+	Route::controller('bracket');	
+	Route::controller('user');	
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -86,5 +92,5 @@ Route::filter('csrf', function()
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::to('login');
+	if (Auth::guest()) return Redirect::to('home/login');
 });

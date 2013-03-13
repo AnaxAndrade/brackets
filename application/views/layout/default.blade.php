@@ -21,17 +21,22 @@
      <div id="leftPanelWrapper" class="panel">
         <div class="innerPanel">
             <ul>   
-                <li><a href="<?=URL::to('bracket/tournament')?>">My Bracket</a></li>
-                <li><a href="<?=URL::to('bracket/players')?>">Players <span class="playerCount">(<?=(isset($bracket->players) ? count($bracket->players) : '0')?>)</span></a></li>
-                <li><a href="<?=URL::to('bracket/teams')?>">Teams <span class="teamCount">(<?=(isset($bracket->teams) ? count($bracket->teams) : '0')?>)</span></a></li>
+                <li><a href="<?=URL::to('user')?>">User Dashboard</a></li>
+                <?php if(Session::get('bracketId')): ?>
+                <li><a href="<?=URL::to('bracket/tournament')?>">Current Bracket</a></li>
+                <li><a href="<?=URL::to('bracket/players')?>">Players <span class="playerCount">(<?=count($bracket->players)?>)</span></a></li>
+                <li><a href="<?=URL::to('bracket/teams')?>">Teams <span class="teamCount">(<?=count($bracket->teams)?>)</span></a></li>
+                <?php else: ?>
+                <li><a href="<?=URL::to('bracket')?>">Start A Tournament</a></li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>
      <div id="rightPanelWrapper" class="panel">
         <div class="innerPanel">
             <ul>   
-                <li><a href="<?=URL::to('bracket/tournament')?>">My Account</a></li>
-                <li><a href="<?=URL::to('bracket/players')?>">My Bracket History</a></li>
+                <li><a href="<?=URL::to('user/account')?>">My Account</a></li>
+                <li><a href="<?=URL::to('user/logout')?>">Sign Out</a></li>
             </ul>
         </div>
     </div>
