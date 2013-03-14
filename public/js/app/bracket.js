@@ -19,6 +19,14 @@ $(document).ready(function(){
 			if( ! confirm(el.data('confirm-msg')))
 			{
 				return;
+			}else{
+				// we'll hide the row immediately and delete it when it's been completed.  
+				// If it's not completed, let's show the row again.
+				parent.hide(); 
+				if(parent.parent().children('li').length == 1)
+				{
+					$('.emptyListMsg', parent.parent()).show();
+				}
 			}
 		}
 
@@ -28,10 +36,14 @@ $(document).ready(function(){
 		request.done(function(data) {
 			if(data.code == 200)
 			{
-				parent.remove();
+				parent.remove(); 
 			}else{
+				parent.show(); 
+				$('.emptyListMsg').hide();
 				alert(data.msg);
 			}
+
+
 		});
 
 		request.fail(function(jqXHR, textStatus) {
@@ -96,7 +108,7 @@ function createBracketPlayer(ev)
 	var data = form.serialize();
 	var url = form.attr('action');
 	var name = $('input[name=playerName]', form).val();
-	var list = $('#playerList ol');
+	var list = $('#playerList ul');
 
 	if( ! name) return;
 	

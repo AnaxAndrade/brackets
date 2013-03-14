@@ -41,11 +41,11 @@
 								<?=Form::open('bracket/set_match_winner/'.$match->id, 'POST', array('id'=>'saveMatchResultsForm'))?>
 									<div class="floatleft span27">
 										<label><?=$match->teams[0]->playerNames(' and ')?></label>
-										<?=Form::select('teamScoreHome', range(0,8), 0)?>
+										<?=Form::select('teamScoreHome', range(0,8), 5)?>
 									</div>
 									<div class="floatright span47">
 										<label><?=$match->teams[1]->playerNames(' and ')?></label>
-										<?=Form::select('teamScoreAway', range(0,8), 0)?>
+										<?=Form::select('teamScoreAway', range(0,8), 5)?>
 									</div>
 									<?=Form::submit('Save Match Results', array('class'=>'btn sm center span100'))?>
 								<?=Form::close()?>

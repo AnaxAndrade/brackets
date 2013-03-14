@@ -7,11 +7,10 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta name="user-scalable" content="no">
-    <link rel="apple-touch-icon" href="public/img/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" href="/my-app-icon.png" />
-    <link rel="apple-touch-icon" href="touch-icon-iphone.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="touch-icon-ipad.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="touch-icon-iphone4.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="public/img/apple-iphone-icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="public/img/apple-ipad-icon.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="public/img/apple-iphone-ret-icon.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="public/img/apple-ipad-ret-icon.png" />
 
     <title>BRACKET</title>  
     

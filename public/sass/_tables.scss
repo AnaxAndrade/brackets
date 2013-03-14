@@ -1,0 +1,21 @@
+/*
+	TABLES
+*/
+
+table {
+	width: 100%;
+	margin: 5px 0 15px;
+	thead {
+		th {
+			text-align: left;
+			padding: 5px 2px;
+			font: normal 1.2em/1.4 Verdana, Helvetica, Arial, sans-serif;
+		}
+	}
+	td {
+		padding: 8px 2px;
+		font: normal 1.2em/1.4 Verdana, Helvetica, Arial, sans-serif;
+		color: #626363;
+		border-bottom: 1px solid #e9ecec;
+	}
+}

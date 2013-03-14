@@ -77,6 +77,10 @@ hr {
 	&.lg {
 		margin: 20px 0;
 	}
+	&.spacer {
+		background-color: transparent;
+		margin: 25px 0;
+	}
 }
 
 code {

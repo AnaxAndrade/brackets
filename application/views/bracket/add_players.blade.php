@@ -6,7 +6,7 @@
 <hr />
 <div class="clear">
 	<div id="playerList" class="clear">
-		<ol>
+		<ul>
 		<?php if($bracket->players): ?>
 			<?php foreach($bracket->players as $k => $p): ?>
 				<li>
@@ -17,7 +17,7 @@
 		<?php else: ?>
 			<p class="emptyListMsg">You have not added any players yet.</p>
 		<?php endif; ?>
-		</ol>
+		</ul>
 		<hr />
 	</div>
 

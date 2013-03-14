@@ -6,6 +6,7 @@
 @import "buttons";
 @import "typography";
 @import "forms";
+@import "tables";
 @import "alerts";
 
 /*
@@ -378,6 +379,18 @@ header {
 	}
 }
 #playerList {
+	ul {
+		list-style: decimal;
+		li {
+			font-size: 1.4em;
+			color: #b6b6b6;
+			margin-left: 23px;
+			padding-left: 10px;
+		}
+		h3 {
+			font-size: 1em;
+		}
+	}
 	@include respond-to(desktop) {
 		float: left;
 		width: 46%;

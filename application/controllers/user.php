@@ -5,9 +5,21 @@ class User_Controller extends Base_Controller
 
 	public function get_index()
 	{
-		$bracket = Bracket::find(Session::get('bracketId'));
+		$bracket = Bracket::find(Session::get('bracketId'));  // current bracket if there is one.
 
-		return View::make('user/dashboard', array('bracket'=>$bracket));
+		// This is the dashboard screen so we'll get some (or all) 
+		// of the brackets this user has created in the past.
+		$player = Auth::user()->player;
+		$createdBrackets = $player->createdBrackets()->take(5)->get();  
+		$playedBrackets = $player->brackets()->take(5)->get();
+
+		$v = [
+			'createdBrackets' => $createdBrackets,
+			'playedBrackets' => $playedBrackets,
+			'bracket'=>$bracket
+		];
+
+		return View::make('user/dashboard', $v);
 	}
 
 	// show account form
@@ -16,7 +28,7 @@ class User_Controller extends Base_Controller
 		$formErrors = Session::get('errors');
 
 		$bracket = Bracket::find(Session::get('bracketId'));
-		$user = User::find(Auth::user()->id);
+		$user = Auth::user();
 
 		return View::make('user/account', array('bracket'=>$bracket, 'user' => $user, 'formErrors' => $formErrors));
 	}

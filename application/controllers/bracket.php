@@ -20,6 +20,7 @@ class Bracket_Controller extends Base_Controller
 		$bracket->losses = 1; 												// It's one for now until double elimination is ready.
 		$bracket->players_per_team = Input::get('bracketType', 1);			// Default to singles
 		$bracket->access_str = strtoupper(Str::random(8, 'alpha'));
+		$bracket->created_by = Auth::user()->player->id;		// created by the current user.
 
 		// save the new bracket
 		if($bracket->save())

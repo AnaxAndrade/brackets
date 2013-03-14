@@ -69,6 +69,16 @@ class Bracket extends Eloquent {
 			return $this->has_many_and_belongs_to('Player');
 		}
 
+		/**
+		 * Get all brackets a player id has played in.
+		 *
+		 * @return Bracket
+		 **/
+		public static function playedIn($pid, $limit = false, $offset = false)
+		{
+			$r = Player::find($pid)->brackets;
 
+			return $r;
+		}
 	
 	}
